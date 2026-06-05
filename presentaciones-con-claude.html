@@ -7,18 +7,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* =============================================
-   VIEWPORT BASE — MANDATORY
-   ============================================= */
+/* ==========================================
+   BASE RESET & VIEWPORT MANDATORY
+   ========================================== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 html, body { height: 100%; overflow-x: hidden; }
 html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
 
 .slide {
   width: 100vw; height: 100vh; height: 100dvh;
   overflow: hidden; scroll-snap-align: start;
-  display: flex; flex-direction: column; position: relative;
+  display: flex; flex-direction: column;
+  position: relative;
 }
+
 .slide-content {
   flex: 1; display: flex; flex-direction: column;
   justify-content: center; max-height: 100%; overflow: hidden;
@@ -26,33 +29,24 @@ html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
 }
 
 :root {
-  /* ---- Emil Kowal spring curves ---- */
-  --spring-out:  cubic-bezier(0.34, 1.56, 0.64, 1);   /* bouncy pop — for elements entering */
-  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);        /* strong ease-out — for release */
-  --ease-inout:  cubic-bezier(0.77, 0, 0.175, 1);       /* strong in-out — for on-screen moves */
-
-  /* ---- Typography scale ---- */
   --title: clamp(1.5rem, 5vw, 4rem);
-  --h2:    clamp(1.25rem, 3.5vw, 2.5rem);
-  --h3:    clamp(1rem, 2.2vw, 1.6rem);
-  --body:  clamp(0.75rem, 1.5vw, 1.05rem);
-  --small: clamp(0.62rem, 1vw, 0.85rem);
-
-  /* ---- Spacing ---- */
-  --pad:  clamp(1rem, 5vw, 5rem);
-  --gap:  clamp(0.5rem, 2vw, 2rem);
+  --h2: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3: clamp(1rem, 2.2vw, 1.6rem);
+  --body: clamp(0.75rem, 1.5vw, 1.05rem);
+  --small: clamp(0.65rem, 1vw, 0.85rem);
+  --pad: clamp(1rem, 5vw, 5rem);
+  --gap: clamp(0.5rem, 2vw, 2rem);
   --egap: clamp(0.25rem, 1vw, 1rem);
 
-  /* ---- Neon Cyber palette ---- */
   --bg:     #030712;
   --bg2:    #080d1a;
   --cyan:   #00d4ff;
   --mag:    #ff0080;
   --white:  #f0f6ff;
   --muted:  #5a6a8a;
-  --card:   rgba(0, 212, 255, 0.04);
-  --border: rgba(0, 212, 255, 0.14);
-  --grid:   rgba(0, 212, 255, 0.055);
+  --card:   rgba(0,212,255,0.04);
+  --border: rgba(0,212,255,0.14);
+  --grid:   rgba(0,212,255,0.055);
 }
 
 body { background: var(--bg); color: var(--white);
@@ -63,17 +57,16 @@ body { background: var(--bg); color: var(--white);
 }
 @media (max-height: 600px) {
   :root { --pad: clamp(0.5rem,2.5vw,1.5rem); --title: clamp(1.1rem,4vw,2rem); --body: clamp(0.7rem,1.2vw,0.95rem); }
-  .keyboard-hint { display: none; }
+  .nav-dots, .keyboard-hint { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
   html { scroll-behavior: auto; }
-  .cube { animation: none !important; }
 }
 
-/* =============================================
-   DECORATIVE
-   ============================================= */
+/* ==========================================
+   DECORATIVE ELEMENTS
+   ========================================== */
 .grid-bg {
   position: absolute; inset: 0; pointer-events: none;
   background-image:
@@ -81,394 +74,512 @@ body { background: var(--bg); color: var(--white);
     linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: clamp(30px,5vw,60px) clamp(30px,5vw,60px);
 }
-.glow { position: absolute; border-radius: 50%; pointer-events: none; }
 
-/* =============================================
+.glow {
+  position: absolute; border-radius: 50%; pointer-events: none;
+}
+
+/* ==========================================
    TYPOGRAPHY
-   ============================================= */
+   ========================================== */
 h1 { font-family: 'Clash Display', sans-serif; font-size: var(--title);
   font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; }
 h2 { font-family: 'Clash Display', sans-serif; font-size: var(--h2);
   font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
-p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,.82); }
+h3 { font-family: 'Satoshi', sans-serif; font-size: var(--h3); font-weight: 700; }
+p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82); }
+
 .mono { font-family: 'JetBrains Mono', monospace; }
-.cy { color: var(--cyan); } .mg { color: var(--mag); } .mu { color: var(--muted); }
+.cy  { color: var(--cyan); }
+.mg  { color: var(--mag); }
+.mu  { color: var(--muted); }
+
 .grad { background: linear-gradient(135deg, var(--cyan), var(--mag));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-/* =============================================
-   CARDS & TAGS
-   ============================================= */
-.card { background: var(--card); border: 1px solid var(--border);
-  border-radius: clamp(8px,1vw,14px); padding: clamp(0.75rem,2vw,1.5rem); }
-.card-glow { border-color: rgba(0,212,255,.4);
-  box-shadow: 0 0 clamp(15px,2vw,30px) rgba(0,212,255,.1); }
-.tag { display: inline-block; padding: 0.2em 0.75em; border-radius: 100px;
-  font-size: var(--small); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-.tag-cy { background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.28); color: var(--cyan); }
-.tag-mg { background: rgba(255,0,128,.1); border: 1px solid rgba(255,0,128,.28); color: var(--mag); }
+/* ==========================================
+   CARDS
+   ========================================== */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: clamp(8px,1vw,14px); padding: clamp(0.75rem,2vw,1.5rem);
+  backdrop-filter: blur(8px);
+}
+.card-glow { border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 clamp(15px,2vw,30px) rgba(0,212,255,0.1); }
+
+.tag {
+  display: inline-block; padding: 0.2em 0.75em; border-radius: 100px;
+  font-size: var(--small); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.tag-cy { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.28); color: var(--cyan); }
+.tag-mg { background: rgba(255,0,128,0.1); border: 1px solid rgba(255,0,128,0.28); color: var(--mag); }
+
 .hr { height: 1px; background: linear-gradient(90deg, var(--cyan), transparent);
-  opacity: .35; margin: clamp(0.4rem,1vw,0.75rem) 0; }
-.section-label { position: absolute; top: clamp(1rem,2.5vw,2.5rem); right: clamp(1rem,2.5vw,2.5rem);
+  opacity: 0.35; margin: clamp(0.4rem,1vw,0.75rem) 0; }
+
+.section-label {
+  position: absolute; top: clamp(1rem,2.5vw,2.5rem); right: clamp(1rem,2.5vw,2.5rem);
   font-family: 'JetBrains Mono', monospace; font-size: var(--small);
-  color: var(--muted); letter-spacing: .1em; text-transform: uppercase; opacity: .55; }
+  color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55;
+}
 
-/* =============================================
+/* ==========================================
    PROGRESS & COUNTER
-   ============================================= */
-.progress-bar { position: fixed; top: 0; left: 0; height: 2px;
+   ========================================== */
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
   background: linear-gradient(90deg, var(--cyan), var(--mag));
-  transition: width 0.4s var(--ease-out); z-index: 200; box-shadow: 0 0 8px var(--cyan); }
-.slide-counter { position: fixed; bottom: clamp(1rem,2vw,2rem); right: clamp(1rem,2vw,2rem);
-  font-family: 'JetBrains Mono', monospace; font-size: var(--small); color: var(--muted); z-index: 200; }
-.keyboard-hint { position: fixed; bottom: clamp(1rem,2vw,2rem); left: clamp(1rem,2vw,2rem);
-  font-family: 'JetBrains Mono', monospace; font-size: var(--small); color: var(--muted); z-index: 200; opacity: .45; }
-
-/* =============================================
-   SPRING REVEALS — staggered, transform+opacity only
-   Emil: animate only transform + opacity (props-transform-opacity)
-   Emil: stagger 50ms between children (polish-stagger-children)
-   ============================================= */
-.sr { opacity: 0; transform: translateY(16px) scale(0.98);
-  transition:
-    opacity 420ms var(--ease-out),
-    transform 480ms var(--spring-out);
-  will-change: transform, opacity;
+  transition: width 0.4s ease; z-index: 200;
+  box-shadow: 0 0 8px var(--cyan);
 }
-.sr.on { opacity: 1; transform: none; }
-/* stagger delays set via JS so each slide can reset them */
-
-/* =============================================
-   BUTTONS — scale(0.97) press feedback
-   Emil: scale(0.97) on press, 150ms down, 100ms up (transform-scale-097, timing-asymmetric)
-   ============================================= */
-.btn-spring {
-  cursor: pointer; border: none; background: none;
-  transition: transform 100ms var(--ease-out);  /* fast release */
-  will-change: transform;
+.slide-counter {
+  position: fixed; bottom: clamp(1rem,2vw,2rem); right: clamp(1rem,2vw,2rem);
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  color: var(--muted); z-index: 200; letter-spacing: 0.1em;
 }
-.btn-spring:hover  { transform: scale(1.03); }
-/* mousedown sets scale(0.97) via JS for asymmetric timing */
+.keyboard-hint {
+  position: fixed; bottom: clamp(1rem,2vw,2rem); left: clamp(1rem,2vw,2rem);
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  color: var(--muted); z-index: 200; opacity: 0.5;
+}
 
-/* =============================================
-   SLIDE 1 — TITLE + DRAGGABLE 3D CUBE
-   ============================================= */
+/* ==========================================
+   REVEAL ANIMATIONS
+   ========================================== */
+.r { opacity: 0; transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease; }
+.r.on { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+.d5 { transition-delay: 0.5s; } .d6 { transition-delay: 0.6s; }
+
+/* ==========================================
+   SLIDE 1 — TÍTULO + CUBO 3D
+   ========================================== */
 #s1 { background: var(--bg); }
-#s1 .scanline { position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  animation: scan 4s linear infinite; opacity: .22; pointer-events: none; }
-@keyframes scan { 0%{ transform: translateY(-2px); } 100%{ transform: translateY(100vh); } }
 
-/* CSS 3D Cube — draggable via JS spring */
-.scene { width: clamp(100px,14vw,180px); height: clamp(100px,14vw,180px);
-  perspective: 700px; flex-shrink: 0; cursor: grab; user-select: none; }
-.scene:active { cursor: grabbing; }
-.cube { width: 100%; height: 100%; transform-style: preserve-3d;
-  will-change: transform; }
-.cube-face { position: absolute; inset: 0;
-  border: 1px solid rgba(0,212,255,.35); background: rgba(0,212,255,.04);
-  backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center;
-  font-family: 'JetBrains Mono', monospace; font-size: clamp(0.5rem,1.2vw,.85rem);
-  color: rgba(0,212,255,.75); letter-spacing: .08em; }
+#s1 .scanline {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  animation: scan 4s linear infinite; opacity: 0.25;
+}
+@keyframes scan { 0% { transform: translateY(-2px); } 100% { transform: translateY(100vh); } }
+
+/* CSS 3D Cube */
+.scene {
+  width: clamp(100px,14vw,180px); height: clamp(100px,14vw,180px);
+  perspective: 600px; flex-shrink: 0;
+}
+.cube {
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  animation: rotateCube 14s linear infinite;
+  position: relative;
+}
+@keyframes rotateCube {
+  0%   { transform: rotateX(15deg) rotateY(0deg); }
+  100% { transform: rotateX(15deg) rotateY(360deg); }
+}
+.cube-face {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.04);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.5rem, 1.2vw, 0.85rem);
+  color: rgba(0,212,255,0.7);
+  letter-spacing: 0.08em;
+}
+
 .cube .front  { transform: translateZ(calc(clamp(50px,7vw,90px))); }
 .cube .back   { transform: rotateY(180deg) translateZ(calc(clamp(50px,7vw,90px))); }
 .cube .left   { transform: rotateY(-90deg) translateZ(calc(clamp(50px,7vw,90px))); }
-.cube .right  { transform: rotateY( 90deg) translateZ(calc(clamp(50px,7vw,90px))); }
-.cube .top    { transform: rotateX( 90deg) translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .right  { transform: rotateY(90deg)  translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .top    { transform: rotateX(90deg)  translateZ(calc(clamp(50px,7vw,90px))); }
 .cube .bottom { transform: rotateX(-90deg) translateZ(calc(clamp(50px,7vw,90px))); }
 
-#s1 .hero-row { display: flex; align-items: center; gap: clamp(1.5rem,4vw,4rem); flex-wrap: wrap; }
-#s1 .eyebrow  { display: flex; align-items: center; gap: .75rem;
+#s1 .hero-row {
+  display: flex; align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  flex-wrap: wrap;
+}
+
+#s1 .eyebrow { display: flex; align-items: center; gap: 0.75rem;
   margin-bottom: clamp(0.5rem,1.5vw,1.25rem); }
 #s1 .eyebrow-line { width: clamp(20px,3vw,40px); height: 1px;
   background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+
 #s1 .stats { display: flex; gap: clamp(1rem,3vw,3rem); margin-top: clamp(0.75rem,2vw,1.75rem); }
-#s1 .stat-n { font-family: 'Clash Display', sans-serif; font-size: clamp(1.25rem,2.5vw,2rem);
-  font-weight: 700; color: var(--cyan); }
-#s1 .stat-l { font-size: var(--small); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+#s1 .stat-n { font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.25rem,2.5vw,2rem); font-weight: 700; color: var(--cyan); }
+#s1 .stat-l { font-size: var(--small); color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em; }
 
-/* =============================================
-   SLIDE 2 — FLIP CARDS
-   Emil: spring-out curve on flip, blur bridge at midpoint (polish-blur-bridge)
-   Emil: interruptible — CSS transition on transform, not keyframes
-   ============================================= */
+/* ==========================================
+   SLIDE 2 — PROBLEMA (flip cards)
+   ========================================== */
 #s2 { background: var(--bg2); }
-.flip-grid { display: grid; grid-template-columns: repeat(2,1fr);
-  gap: clamp(0.5rem,1.5vw,1rem); margin-top: clamp(0.6rem,1.5vw,1.25rem); }
-.flip-wrap { perspective: 900px; }
-.flip-card { position: relative; width: 100%; padding-top: clamp(80px,12vh,130px);
-  transform-style: preserve-3d;
-  /* Emil spring-out curve — CSS transition is interruptible (interact-interruptible) */
-  transition: transform 540ms var(--spring-out), filter 270ms var(--ease-out);
-  cursor: pointer; will-change: transform; }
-.flip-card:hover:not(.flipped) { transform: rotateY(8deg) translateY(-2px); }
-.flip-card.flipped  { transform: rotateY(180deg); }
-/* blur bridge at ~90deg handled in JS */
-.flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden;
-  -webkit-backface-visibility: hidden; border-radius: 10px;
-  padding: clamp(0.6rem,1.5vw,1rem); display: flex; flex-direction: column; justify-content: center; }
-.flip-front { background: rgba(255,0,128,.05); border: 1px solid rgba(255,0,128,.16); }
-.flip-back  { background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.25);
-  transform: rotateY(180deg); }
-.flip-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; margin-bottom: .3rem; }
-.flip-desc  { font-size: var(--small); color: var(--muted); line-height: 1.5; }
-.flip-hint  { font-size: var(--small); color: var(--muted); opacity: .5;
-  margin-top: clamp(0.4rem,.8vw,.6rem); font-family: 'JetBrains Mono', monospace; }
 
-/* =============================================
-   SLIDE 3 — SOLUTION
-   ============================================= */
-#s3 .cmd-box { background: rgba(0,0,0,.65); border: 1px solid rgba(0,212,255,.28);
-  border-radius: 12px; padding: clamp(.75rem,2vw,1.75rem); margin: clamp(.6rem,1.5vw,1.25rem) 0;
-  position: relative; overflow: hidden; }
-#s3 .cmd-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
-.c-prompt { color: var(--mag); font-family: 'JetBrains Mono', monospace; font-size: clamp(.65rem,1.25vw,.95rem); }
-.c-cmd    { color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: clamp(.65rem,1.25vw,.95rem); }
-.c-arg    { color: rgba(240,246,255,.5); font-family: 'JetBrains Mono', monospace; font-size: clamp(.65rem,1.25vw,.95rem); }
-.c-comm   { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: clamp(.65rem,1.25vw,.95rem); }
-
-/* =============================================
-   SLIDE 4 — 7 STEPS STEPPER
-   Emil: spring-in on step content (spring-out curve + translateX)
-   ============================================= */
-#s4 { background: var(--bg2); }
-.stepper { display: flex; flex-direction: column; gap: clamp(.3rem,.8vw,.6rem);
-  margin-top: clamp(.5rem,1.2vw,1rem); }
-.step { display: flex; align-items: stretch; cursor: pointer; border-radius: 10px;
-  overflow: hidden; border: 1px solid var(--border);
-  transition: border-color 250ms var(--ease-out); }
-.step.active { border-color: rgba(0,212,255,.5); }
-.step-bar { width: 3px; flex-shrink: 0; background: rgba(0,212,255,.15);
-  transition: background 250ms var(--ease-out); }
-.step.active .step-bar { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
-.step-inner { flex: 1; display: flex; align-items: center;
-  gap: clamp(.5rem,1.5vw,1rem); padding: clamp(.4rem,1vw,.7rem) clamp(.6rem,1.5vw,1.1rem);
-  background: var(--card); transition: background 250ms var(--ease-out); }
-.step.active .step-inner { background: rgba(0,212,255,.07); }
-.step-num { font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2vw,1.5rem);
-  font-weight: 700; color: var(--cyan); opacity: .28; flex-shrink: 0; min-width: 1.8ch;
-  transition: opacity 250ms var(--ease-out); }
-.step.active .step-num { opacity: 1; }
-.step-title { font-size: clamp(.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
-.step-desc  { font-size: var(--small); color: var(--muted); line-height: 1.45; }
-.step-detail {
-  /* CSS transition — interruptible (interact-interruptible) */
-  opacity: 0; transform: translateY(6px);
-  transition: opacity 280ms var(--ease-out), transform 320ms var(--spring-out);
-  font-size: var(--small); color: rgba(0,212,255,.8); line-height: 1.55;
-  padding: clamp(.4rem,1vw,.7rem) clamp(.6rem,1.5vw,1.1rem) clamp(.4rem,1vw,.7rem)
-    calc(clamp(.6rem,1.5vw,1.1rem) + clamp(1rem,2vw,1.5rem) + clamp(.5rem,1.5vw,1rem) + 3px);
-  background: rgba(0,212,255,.03); border-top: 1px solid rgba(0,212,255,.1);
-  max-height: 0; overflow: hidden;
-  transition: max-height 320ms var(--ease-inout), opacity 280ms var(--ease-out), transform 320ms var(--spring-out);
+.flip-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: clamp(0.5rem,1.5vw,1rem); margin-top: clamp(0.6rem,1.5vw,1.25rem);
 }
-.step-detail.open { max-height: 90px; opacity: 1; transform: none; }
+.flip-wrap { perspective: 800px; }
+.flip-card {
+  position: relative; width: 100%; padding-top: clamp(80px,12vh,130px);
+  transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.flip-card.flipped { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 10px; padding: clamp(0.6rem,1.5vw,1rem);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.flip-front {
+  background: rgba(255,0,128,0.05); border: 1px solid rgba(255,0,128,0.16);
+}
+.flip-back {
+  background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.25);
+  transform: rotateY(180deg);
+}
+.flip-title { font-size: clamp(0.8rem,1.3vw,1rem); font-weight: 700; margin-bottom: 0.3rem; }
+.flip-desc  { font-size: var(--small); color: var(--muted); line-height: 1.5; }
+.flip-hint  { font-size: var(--small); color: var(--muted); opacity: 0.55;
+  margin-top: clamp(0.5rem,1vw,0.75rem); font-family: 'JetBrains Mono', monospace; }
 
-/* =============================================
-   SLIDE 5 — CONTEXT FILES
-   ============================================= */
-.two-col { display: grid; grid-template-columns: 1fr 1fr;
-  gap: clamp(.5rem,2vw,1.5rem); margin-top: clamp(.5rem,1.2vw,1rem); }
-@media (max-width:680px) { .two-col { grid-template-columns: 1fr; } }
+/* ==========================================
+   SLIDE 3 — SOLUCIÓN
+   ========================================== */
+#s3 .cmd-box {
+  background: rgba(0,0,0,0.65); border: 1px solid rgba(0,212,255,0.28);
+  border-radius: 12px; padding: clamp(0.75rem,2vw,1.75rem);
+  margin: clamp(0.6rem,1.5vw,1.25rem) 0; position: relative; overflow: hidden;
+}
+#s3 .cmd-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+#s3 .cmd-line { font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.65rem,1.25vw,0.95rem); line-height: 1.8; }
+.c-prompt { color: var(--mag); }
+.c-cmd    { color: var(--cyan); }
+.c-arg    { color: rgba(240,246,255,0.55); }
+.c-comm   { color: var(--muted); }
+.c-str    { color: #a8ff78; }
+
+/* ==========================================
+   SLIDE 4 — LOS 7 PASOS (interactive stepper)
+   ========================================== */
+#s4 { background: var(--bg2); }
+
+.stepper { display: flex; flex-direction: column;
+  gap: clamp(0.3rem,0.8vw,0.6rem); margin-top: clamp(0.5rem,1.2vw,1rem); }
+
+.step {
+  display: flex; align-items: stretch; gap: 0;
+  cursor: pointer; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border); transition: border-color 0.3s;
+}
+.step.active { border-color: rgba(0,212,255,0.5); }
+.step.active .step-bar { background: var(--cyan); }
+
+.step-bar {
+  width: 3px; flex-shrink: 0;
+  background: rgba(0,212,255,0.15);
+  transition: background 0.3s;
+}
+.step-inner {
+  flex: 1; display: flex; align-items: center;
+  gap: clamp(0.5rem,1.5vw,1rem); padding: clamp(0.4rem,1vw,0.7rem) clamp(0.6rem,1.5vw,1.1rem);
+  background: var(--card); transition: background 0.3s;
+}
+.step.active .step-inner { background: rgba(0,212,255,0.07); }
+
+.step-num {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1rem,2vw,1.5rem); font-weight: 700;
+  color: var(--cyan); opacity: 0.3; flex-shrink: 0; min-width: 1.8ch;
+  transition: opacity 0.3s;
+}
+.step.active .step-num { opacity: 1; }
+
+.step-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
+.step-desc { font-size: var(--small); color: var(--muted); line-height: 1.45; }
+
+.step-detail {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease; font-size: var(--small); color: var(--muted);
+  padding: 0 clamp(0.6rem,1.5vw,1.1rem) 0 calc(clamp(0.6rem,1.5vw,1.1rem) + clamp(1rem,2vw,1.5rem) + clamp(0.5rem,1.5vw,1rem) + 3px);
+}
+.step-detail.open { max-height: 80px; padding-bottom: clamp(0.4rem,0.8vw,0.6rem); }
+.step-detail p { font-size: var(--small); color: rgba(0,212,255,0.75); line-height: 1.5; }
+
+/* ==========================================
+   SLIDE 5 — CONTEXTO (file tree + particles canvas)
+   ========================================== */
+#s5 .two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(0.5rem,2vw,1.5rem); margin-top: clamp(0.5rem,1.2vw,1rem);
+}
+@media (max-width: 680px) { #s5 .two-col { grid-template-columns: 1fr; } }
+
 .file-tree { font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(.6rem,1.1vw,.85rem); line-height: 2; }
-.ft-dir  { color: var(--cyan); } .ft-file { color: rgba(240,246,255,.65); }
-.ft-hi   { color: #a8ff78; font-weight: 600; } .ft-cm { color: var(--muted); font-size: .85em; }
-.file-desc { display: flex; flex-direction: column; gap: clamp(.35rem,.8vw,.6rem); }
-.fd-item { padding: clamp(.5rem,1.2vw,.875rem); background: var(--card);
+  font-size: clamp(0.62rem,1.1vw,0.85rem); line-height: 2; }
+.ft-dir  { color: var(--cyan); }
+.ft-file { color: rgba(240,246,255,0.65); }
+.ft-hi   { color: #a8ff78; font-weight: 600; }
+.ft-cm   { color: var(--muted); font-size: 0.85em; }
+
+.file-desc { display: flex; flex-direction: column; gap: clamp(0.35rem,0.8vw,0.6rem); }
+.fd-item { padding: clamp(0.5rem,1.2vw,0.875rem); background: var(--card);
   border: 1px solid var(--border); border-radius: 8px; }
-.fd-title { font-size: clamp(.72rem,1.15vw,.9rem); font-weight: 700; color: var(--cyan);
-  margin-bottom: .2rem; font-family: 'JetBrains Mono', monospace; }
+.fd-title { font-size: clamp(0.72rem,1.15vw,0.9rem); font-weight: 700;
+  color: var(--cyan); margin-bottom: 0.2rem; font-family: 'JetBrains Mono', monospace; }
 .fd-desc  { font-size: var(--small); color: var(--muted); line-height: 1.45; }
 
-/* =============================================
-   SLIDE 6 — TABS + COPY
-   Emil: button scale press feedback (transform-scale-097)
-   ============================================= */
-.tab-nav { display: flex; gap: 0; margin-top: clamp(.6rem,1.5vw,1.25rem);
-  border-bottom: 1px solid var(--border); }
-.tab-btn { padding: .4em 1em; font-family: 'JetBrains Mono', monospace; font-size: var(--small);
-  color: var(--muted); background: none; border: none; cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: color 200ms var(--ease-out), border-color 200ms var(--ease-out),
-              transform 100ms var(--ease-out);  /* fast release (asymmetric) */
-  will-change: transform; }
-.tab-btn:hover  { color: rgba(240,246,255,.7); }
+/* ==========================================
+   SLIDE 6 — EL COMANDO
+   ========================================== */
+#s6 .tab-nav {
+  display: flex; gap: 0; margin-top: clamp(0.6rem,1.5vw,1.25rem);
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 0.4em 1em; font-family: 'JetBrains Mono', monospace;
+  font-size: var(--small); color: var(--muted); background: none; border: none;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s; letter-spacing: 0.05em;
+}
 .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
-/* mousedown → scale(0.97) via JS, 150ms press, 100ms release */
-
-.tab-pane { display: none; margin-top: clamp(.5rem,1.2vw,1rem); }
+.tab-pane { display: none; margin-top: clamp(0.5rem,1.2vw,1rem); }
 .tab-pane.active { display: block; }
-.code-blk { background: rgba(0,0,0,.65); border: 1px solid rgba(0,212,255,.22);
-  border-radius: 10px; padding: clamp(.75rem,2vw,1.5rem); position: relative;
-  font-family: 'JetBrains Mono', monospace; font-size: clamp(.62rem,1.15vw,.9rem); line-height: 1.8; }
-.copy-btn { position: absolute; top: .75rem; right: .75rem; font-family: 'JetBrains Mono', monospace;
-  font-size: var(--small); background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.25);
-  color: var(--cyan); border-radius: 6px; padding: .2em .7em; cursor: pointer;
-  transition: background 200ms var(--ease-out), transform 100ms var(--ease-out);
-  will-change: transform; }
-.copy-btn:hover { background: rgba(0,212,255,.2); }
-.copy-btn.copied { color: #a8ff78; border-color: #a8ff78; background: rgba(168,255,120,.1); }
 
-/* =============================================
-   SLIDE 7 — RESULT LIST
-   ============================================= */
+.code-blk {
+  background: rgba(0,0,0,0.65); border: 1px solid rgba(0,212,255,0.22);
+  border-radius: 10px; padding: clamp(0.75rem,2vw,1.5rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.62rem,1.15vw,0.9rem); line-height: 1.8;
+  position: relative; overflow: hidden;
+}
+.copy-btn {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25);
+  color: var(--cyan); border-radius: 6px; padding: 0.2em 0.7em;
+  cursor: pointer; transition: background 0.2s, transform 0.1s;
+}
+.copy-btn:hover { background: rgba(0,212,255,0.2); }
+.copy-btn:active { transform: scale(0.95); }
+.copy-btn.copied { color: #a8ff78; border-color: #a8ff78; background: rgba(168,255,120,0.1); }
+
+/* ==========================================
+   SLIDE 7 — RESULTADO
+   ========================================== */
 .result-list { list-style: none; display: flex; flex-direction: column;
-  gap: clamp(.4rem,1vw,.75rem); margin-top: clamp(.6rem,1.5vw,1.25rem); }
-.result-list li { display: flex; align-items: flex-start; gap: .75rem; }
-.rl-bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; margin-top: .05em; }
+  gap: clamp(0.4rem,1vw,0.75rem); margin-top: clamp(0.6rem,1.5vw,1.25rem); }
+.result-list li { display: flex; align-items: flex-start; gap: 0.75rem; }
+.rl-bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; margin-top: 0.05em; }
 
-/* =============================================
-   SLIDE 8 — TOGGLES WITH SPRING THUMB
-   Emil: spring-out on thumb translate (ease-spring-natural)
-   Emil: only transform changes, no background-color in raf loop (props-transform-opacity)
-   ============================================= */
+/* ==========================================
+   SLIDE 8 — CONSISTENCIA (toggle switches)
+   ========================================== */
 #s8 { background: var(--bg2); }
-.toggle-demo { display: flex; flex-direction: column; gap: clamp(.5rem,1.2vw,1rem);
-  margin-top: clamp(.6rem,1.5vw,1.25rem); }
-.toggle-row { display: flex; align-items: center; gap: clamp(.75rem,2vw,1.5rem);
-  padding: clamp(.5rem,1.2vw,.875rem) clamp(.75rem,2vw,1.25rem);
+
+.toggle-demo {
+  display: flex; flex-direction: column; gap: clamp(0.5rem,1.2vw,1rem);
+  margin-top: clamp(0.6rem,1.5vw,1.25rem);
+}
+.toggle-row {
+  display: flex; align-items: center; gap: clamp(0.75rem,2vw,1.5rem);
+  padding: clamp(0.5rem,1.2vw,0.875rem) clamp(0.75rem,2vw,1.25rem);
   background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  transition: border-color 220ms var(--ease-out); }
-.toggle-row.active { border-color: rgba(0,212,255,.4); }
-.toggle-switch { position: relative; width: clamp(36px,4vw,52px); height: clamp(20px,2.2vw,28px);
-  flex-shrink: 0; cursor: pointer; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
-.toggle-track { position: absolute; inset: 0; background: rgba(255,255,255,.1);
-  border-radius: 100px; border: 1px solid var(--border);
-  transition: background 220ms var(--ease-out), border-color 220ms var(--ease-out); }
-.toggle-switch input:checked + .toggle-track { background: rgba(0,212,255,.2); border-color: var(--cyan); }
-.toggle-thumb { position: absolute; top: 50%; left: 3px;
+  transition: border-color 0.3s;
+}
+.toggle-row.active { border-color: rgba(0,212,255,0.4); }
+
+.toggle-switch {
+  position: relative; width: clamp(36px,4vw,52px); height: clamp(20px,2.2vw,28px);
+  flex-shrink: 0; cursor: pointer;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0; background: rgba(255,255,255,0.1);
+  border-radius: 100px; border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s;
+}
+.toggle-track::after {
+  content: ''; position: absolute; top: 50%; left: 3px;
+  transform: translateY(-50%);
   width: clamp(12px,1.5vw,20px); height: clamp(12px,1.5vw,20px);
-  background: var(--muted); border-radius: 50%; transform: translateY(-50%);
-  /* spring-out curve — thumb snaps past target then settles (ease-spring-natural) */
-  transition: transform 320ms var(--spring-out), background 220ms var(--ease-out),
-              box-shadow 220ms var(--ease-out);
-  will-change: transform; }
-.toggle-switch input:checked ~ .toggle-thumb {
+  background: var(--muted); border-radius: 50%; transition: transform 0.3s, background 0.3s;
+}
+.toggle-switch input:checked + .toggle-track { background: rgba(0,212,255,0.2); border-color: var(--cyan); }
+.toggle-switch input:checked + .toggle-track::after {
   transform: translateY(-50%) translateX(clamp(14px,1.8vw,24px));
-  background: var(--cyan); box-shadow: 0 0 10px rgba(0,212,255,.6); }
+  background: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.6);
+}
+
 .toggle-label { flex: 1; }
-.tl-title { font-size: clamp(.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
-.tl-off   { font-size: var(--small); color: var(--muted);
-  transition: opacity 200ms var(--ease-out), transform 220ms var(--ease-out); }
-.tl-on    { font-size: var(--small); color: var(--cyan); display: none;
-  transition: opacity 200ms var(--ease-out), transform 220ms var(--spring-out); }
+.tl-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
+.tl-off   { font-size: var(--small); color: var(--muted); }
+.tl-on    { font-size: var(--small); color: var(--cyan); display: none; }
 .toggle-row.active .tl-off { display: none; }
 .toggle-row.active .tl-on  { display: block; }
 
-/* =============================================
-   SLIDE 9 — PRESET PICKER
-   Emil: scale spring on chip selection, blur bridge on preview swap
-   ============================================= */
+/* ==========================================
+   SLIDE 9 — 12 PRESETS (interactive picker)
+   ========================================== */
 #s9 { background: var(--bg); }
-.preset-picker { display: flex; flex-direction: column; gap: clamp(.5rem,1.2vw,1rem);
-  margin-top: clamp(.5rem,1.2vw,1rem); }
-.preset-chips { display: flex; flex-wrap: wrap; gap: clamp(.3rem,.7vw,.6rem); }
-.p-chip { padding: .3em .9em; border-radius: 100px; font-size: var(--small); font-weight: 600;
-  cursor: pointer; border: 1px solid var(--border); background: var(--card);
-  color: var(--muted);
-  /* spring-out on scale for satisfying pop (transform-scale-097 + spring-out) */
-  transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out),
-              background 180ms var(--ease-out), transform 250ms var(--spring-out);
-  will-change: transform; }
-.p-chip:hover  { color: var(--white); border-color: rgba(0,212,255,.3); transform: scale(1.06); }
-.p-chip.sel    { background: rgba(0,212,255,.12); border-color: var(--cyan); color: var(--cyan);
-  transform: scale(1.0); /* settled after spring overshoot */ }
 
-/* Preview panel — blur bridge on swap (polish-blur-bridge) */
-.preset-preview { border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+.preset-picker {
+  display: flex; flex-direction: column; gap: clamp(0.5rem,1.2vw,1rem);
+  margin-top: clamp(0.5rem,1.2vw,1rem);
+}
+.preset-chips {
+  display: flex; flex-wrap: wrap; gap: clamp(0.3rem,0.7vw,0.6rem);
+}
+.p-chip {
+  padding: 0.3em 0.9em; border-radius: 100px;
+  font-size: var(--small); font-weight: 600; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--muted); transition: all 0.2s; letter-spacing: 0.04em;
+  font-family: 'Satoshi', sans-serif;
+}
+.p-chip:hover { color: var(--white); border-color: rgba(0,212,255,0.3); }
+.p-chip.sel { background: rgba(0,212,255,0.12); border-color: var(--cyan); color: var(--cyan); }
+
+.preset-preview {
+  border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
   height: clamp(100px,18vh,180px); display: flex; align-items: center; justify-content: center;
-  position: relative;
-  transition: background 350ms var(--ease-inout), border-color 350ms var(--ease-out),
-              box-shadow 350ms var(--ease-out), filter 180ms var(--ease-out);
-  will-change: filter; }
-.preset-preview.swapping { filter: blur(4px); }  /* blur bridge mid-swap */
-.pp-title { font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2.5vw,1.8rem);
-  font-weight: 700; position: relative; z-index: 2; text-shadow: 0 2px 8px rgba(0,0,0,.5);
-  transition: color 300ms var(--ease-out); }
-.pp-sub   { font-size: var(--small); position: absolute; bottom: .75rem; right: 1rem;
-  color: rgba(255,255,255,.6); font-family: 'JetBrains Mono', monospace; z-index: 2; }
+  position: relative; transition: all 0.4s ease;
+}
+.preset-preview .pp-title {
+  font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2.5vw,1.8rem);
+  font-weight: 700; position: relative; z-index: 2; text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.preset-preview .pp-sub {
+  font-size: var(--small); position: absolute; bottom: 0.75rem; right: 1rem;
+  color: rgba(255,255,255,0.6); font-family: 'JetBrains Mono', monospace; z-index: 2;
+}
 
-/* =============================================
-   SLIDE 10 — PIPELINE STEPS
-   Emil: spring-in from left on active step
-   ============================================= */
+/* ==========================================
+   SLIDE 10 — FLUJO (animated pipeline)
+   ========================================== */
 #s10 { background: var(--bg2); }
-.pipeline { display: flex; align-items: stretch; margin-top: clamp(.6rem,1.5vw,1.25rem); }
-.pl-step { flex: 1; display: flex; flex-direction: column; background: var(--card);
-  border: 1px solid var(--border); padding: clamp(.6rem,1.5vw,1.1rem); cursor: pointer;
-  transition: background 250ms var(--ease-out), border-color 250ms var(--ease-out);
-  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%);
-  margin-left: -7px; }
-.pl-step:first-child { clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%); margin-left: 0; }
-.pl-step:last-child  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 14px 50%); }
-.pl-step.active { background: rgba(0,212,255,.1); border-color: rgba(0,212,255,.45); }
-.pl-step.done   { background: rgba(0,212,255,.055); border-color: rgba(0,212,255,.22); }
-.pl-num   { font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2vw,1.5rem);
-  font-weight: 700; color: var(--cyan); opacity: .28;
-  transition: opacity 250ms var(--ease-out); }
+
+.pipeline {
+  display: flex; align-items: stretch;
+  gap: 0; margin-top: clamp(0.6rem,1.5vw,1.25rem); overflow: hidden;
+}
+.pl-step {
+  flex: 1; display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border);
+  padding: clamp(0.6rem,1.5vw,1.1rem); position: relative;
+  cursor: pointer; transition: background 0.3s, border-color 0.3s;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%);
+  margin-left: -8px;
+}
+.pl-step:first-child { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%); margin-left: 0; }
+.pl-step:last-child  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 16px 50%); }
+
+.pl-step.active { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.45); }
+.pl-step.done   { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.25); }
+
+.pl-num { font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2vw,1.5rem);
+  font-weight: 700; color: var(--cyan); opacity: 0.3; transition: opacity 0.3s; }
 .pl-step.active .pl-num, .pl-step.done .pl-num { opacity: 1; }
-.pl-title { font-size: clamp(.62rem,1.1vw,.85rem); font-weight: 700; color: var(--white); margin-top: .25rem; }
-.pl-sub   { font-size: clamp(.55rem,.9vw,.72rem); color: var(--muted); line-height: 1.4; margin-top: .15rem; }
+.pl-title { font-size: clamp(0.62rem,1.1vw,0.85rem); font-weight: 700; color: var(--white);
+  margin-top: 0.25rem; }
+.pl-sub   { font-size: clamp(0.55rem,0.9vw,0.72rem); color: var(--muted); line-height: 1.4; margin-top: 0.15rem; }
 
-/* Detail + controls */
-.pl-detail { padding: clamp(.6rem,1.5vw,1rem); background: rgba(0,212,255,.05);
-  border: 1px solid rgba(0,212,255,.2); border-radius: 10px;
-  min-height: clamp(55px,8vh,80px); font-size: var(--small); color: rgba(0,212,255,.85); line-height: 1.55;
-  margin-top: clamp(.5rem,1.2vw,1rem);
-  /* spring-in from translateY (transform-only) */
-  transition: opacity 250ms var(--ease-out), transform 300ms var(--spring-out);
-  will-change: transform; }
-.pl-controls { display: flex; gap: .5rem; margin-top: clamp(.5rem,1vw,.75rem); }
-.pl-btn { padding: .35em 1em; border-radius: 8px; font-family: 'JetBrains Mono', monospace;
-  font-size: var(--small); cursor: pointer;
-  transition: background 180ms var(--ease-out), transform 100ms var(--ease-out);
-  will-change: transform; border: none; }
-.pl-prev { background: rgba(255,255,255,.07); color: var(--muted); }
-.pl-prev:hover { background: rgba(255,255,255,.13); color: var(--white); }
-.pl-next { background: rgba(0,212,255,.15); color: var(--cyan); border: 1px solid rgba(0,212,255,.3); }
-.pl-next:hover { background: rgba(0,212,255,.25); }
+.pl-detail {
+  margin-top: clamp(0.5rem,1.2vw,1rem);
+  padding: clamp(0.6rem,1.5vw,1rem); background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.2); border-radius: 10px;
+  min-height: clamp(55px,8vh,80px);
+  font-size: var(--small); color: rgba(0,212,255,0.85); line-height: 1.55;
+}
 
-/* =============================================
-   SLIDE 11 — BENEFITS
-   ============================================= */
-.ben-grid { display: grid; grid-template-columns: repeat(3,1fr);
-  gap: clamp(.4rem,1.2vw,.875rem); margin-top: clamp(.6rem,1.5vw,1.25rem); }
-@media (max-width:650px) { .ben-grid { grid-template-columns: 1fr; } }
-.ben-card { padding: clamp(.6rem,1.5vw,1.1rem); background: var(--card);
+.pl-controls { display: flex; gap: 0.5rem; margin-top: clamp(0.5rem,1vw,0.75rem); }
+.pl-btn {
+  padding: 0.35em 1em; border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  cursor: pointer; transition: background 0.2s, transform 0.1s; border: none;
+}
+.pl-btn:active { transform: scale(0.96); }
+.pl-prev { background: rgba(255,255,255,0.07); color: var(--muted); }
+.pl-prev:hover { background: rgba(255,255,255,0.12); color: var(--white); }
+.pl-next { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); }
+.pl-next:hover { background: rgba(0,212,255,0.25); }
+
+/* ==========================================
+   SLIDE 11 — BENEFICIOS
+   ========================================== */
+.ben-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: clamp(0.4rem,1.2vw,0.875rem); margin-top: clamp(0.6rem,1.5vw,1.25rem);
+}
+@media (max-width: 650px) { .ben-grid { grid-template-columns: 1fr; } }
+
+.ben-card {
+  padding: clamp(0.6rem,1.5vw,1.1rem); background: var(--card);
   border: 1px solid var(--border); border-radius: 10px;
-  display: flex; flex-direction: column; gap: .35rem;
-  transition: border-color 220ms var(--ease-out), transform 220ms var(--spring-out);
-  will-change: transform; }
-.ben-card:hover { border-color: rgba(0,212,255,.35); transform: translateY(-3px) scale(1.01); }
-.ben-mark { width: clamp(6px,.8vw,10px); height: clamp(6px,.8vw,10px);
-  border-radius: 50%; background: var(--cyan); box-shadow: 0 0 6px var(--cyan); margin-bottom: .15rem; }
-.ben-title { font-size: clamp(.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
+  display: flex; flex-direction: column; gap: 0.35rem;
+  transition: border-color 0.25s, transform 0.25s;
+  cursor: default;
+}
+.ben-card:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-2px); }
+.ben-mark { width: clamp(6px,0.8vw,10px); height: clamp(6px,0.8vw,10px);
+  border-radius: 50%; background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan); margin-bottom: 0.15rem; flex-shrink: 0; }
+.ben-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
 .ben-desc  { font-size: var(--small); color: var(--muted); line-height: 1.5; }
 
-/* =============================================
+/* ==========================================
    SLIDE 12 — CTA
-   ============================================= */
+   ========================================== */
 #s12 { background: var(--bg); align-items: center; justify-content: center; text-align: center; }
-.cta-glow { position: absolute; width: 65vw; height: 65vw; top: 50%; left: 50%;
+
+.cta-glow {
+  position: absolute; width: 65vw; height: 65vw; top: 50%; left: 50%;
   transform: translate(-50%,-50%);
-  background: radial-gradient(circle, rgba(0,212,255,.09) 0%, transparent 65%); pointer-events: none; }
-#s12 .cta-inner { position: relative; z-index: 2; display: flex; flex-direction: column;
-  align-items: center; gap: clamp(.6rem,1.5vw,1.25rem); padding: var(--pad); }
-#s12 h2 { font-size: clamp(2rem,7vw,5.5rem); line-height: 1; letter-spacing: -.02em; }
-#s12 .cta-sub { font-size: clamp(.8rem,1.6vw,1.1rem); color: rgba(240,246,255,.5); max-width: 44ch; }
-#s12 .cta-cmd { font-family: 'JetBrains Mono', monospace; font-size: clamp(.75rem,1.4vw,1rem);
-  background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.25);
-  border-radius: 8px; padding: .5em 1.3em; color: var(--cyan); cursor: pointer; position: relative;
-  transition: background 180ms var(--ease-out), transform 100ms var(--ease-out);
-  will-change: transform; }
-#s12 .cta-cmd:hover { background: rgba(0,212,255,.16); }
-.copied-msg { display: none; position: absolute; inset: 0; align-items: center; justify-content: center;
-  background: rgba(0,0,0,.75); border-radius: 8px; font-size: var(--small); color: #a8ff78; }
-.cta-cmd.copied .copied-msg { display: flex; }
-#s12 .tip { font-size: var(--small); color: var(--muted); max-width: 48ch; line-height: 1.6; }
+  background: radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+#s12 .cta-inner {
+  position: relative; z-index: 2; display: flex; flex-direction: column;
+  align-items: center; gap: clamp(0.6rem,1.5vw,1.25rem); padding: var(--pad);
+}
+
+#s12 h2 {
+  font-size: clamp(2rem,7vw,5.5rem);
+  line-height: 1; letter-spacing: -0.02em;
+}
+
+#s12 .cta-sub { font-size: clamp(0.8rem,1.6vw,1.1rem); color: rgba(240,246,255,0.5); max-width: 44ch; }
+
+#s12 .cta-cmd {
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem,1.4vw,1rem);
+  background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 8px; padding: 0.5em 1.3em; color: var(--cyan); cursor: pointer;
+  transition: background 0.2s, transform 0.1s; position: relative;
+}
+#s12 .cta-cmd:hover { background: rgba(0,212,255,0.15); }
+#s12 .cta-cmd:active { transform: scale(0.97); }
+#s12 .cta-cmd .copied-msg {
+  display: none; position: absolute; inset: 0; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7); border-radius: 8px;
+  font-size: var(--small); color: #a8ff78;
+}
+#s12 .cta-cmd.copied .copied-msg { display: flex; }
+
+#s12 .claude-md-tip {
+  font-size: var(--small); color: var(--muted); max-width: 48ch; line-height: 1.6;
+}
 
 </style>
 </head>
@@ -476,38 +587,41 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,.82); 
 
 <div class="progress-bar" id="progressBar"></div>
 <div class="slide-counter" id="slideCounter">01 / 12</div>
-<div class="keyboard-hint">&#8592; &#8594; &nbsp;&middot;&nbsp; rueda &nbsp;&middot;&nbsp; swipe</div>
+<div class="keyboard-hint">&#8592; &#8594; &nbsp;·&nbsp; rueda &nbsp;·&nbsp; swipe</div>
 
 <main>
 
-<!-- ============================================================
-     SLIDE 1 — TÍTULO + CUBO 3D DRAGGABLE
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 1: TÍTULO + CUBO 3D
+     ==================================================== -->
 <section class="slide" id="s1" data-slide="1">
   <div class="grid-bg"></div>
   <div class="scanline"></div>
   <div class="glow" style="width:50vw;height:50vw;top:-15vw;right:-8vw;background:radial-gradient(circle,rgba(0,212,255,.15) 0%,transparent 65%);"></div>
   <div class="glow" style="width:38vw;height:38vw;bottom:-8vw;left:-4vw;background:radial-gradient(circle,rgba(255,0,128,.12) 0%,transparent 65%);"></div>
+
   <div class="slide-content">
     <div class="hero-row">
       <div style="flex:1;min-width:0;">
-        <div class="eyebrow sr">
+        <div class="eyebrow r">
           <div class="eyebrow-line"></div>
-          <span class="mono mu" style="letter-spacing:.15em;text-transform:uppercase;font-size:var(--small);">Claude Code &nbsp;&middot;&nbsp; Frontend Slides</span>
+          <span class="mono mu" style="letter-spacing:.15em;text-transform:uppercase;font-size:var(--small);">Claude Code &nbsp;·&nbsp; Frontend Slides</span>
         </div>
-        <h1 class="sr">Presentaciones<br><span class="grad">que se crean<br>solas.</span></h1>
-        <p class="sr" style="font-size:clamp(.85rem,1.8vw,1.2rem);color:rgba(240,246,255,.55);max-width:40ch;margin-top:clamp(.5rem,1.5vw,1rem);">
+        <h1 class="r d1">
+          Presentaciones<br>
+          <span class="grad">que se crean<br>solas.</span>
+        </h1>
+        <p class="r d2" style="font-size:clamp(0.85rem,1.8vw,1.2rem);color:rgba(240,246,255,.55);max-width:40ch;margin-top:clamp(.5rem,1.5vw,1rem);">
           Dale contexto a Claude Code y recibe un informe con formato consistente — sin tocar slides manualmente.
         </p>
-        <div class="stats sr">
+        <div class="stats r d3">
           <div><div class="stat-n">0</div><div class="stat-l">dependencias</div></div>
           <div><div class="stat-n mg">1</div><div class="stat-l">comando</div></div>
           <div><div class="stat-n">&infin;</div><div class="stat-l">consistencia</div></div>
         </div>
       </div>
-      <!-- Draggable 3D cube — JS spring handles rotation -->
-      <div class="scene sr" id="cubeScene">
-        <div class="cube" id="cube3d">
+      <div class="scene r d3">
+        <div class="cube">
           <div class="cube-face front">SLIDE</div>
           <div class="cube-face back">HTML</div>
           <div class="cube-face left">CSS</div>
@@ -520,101 +634,174 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,.82); 
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 2 — PROBLEMA — flip cards interactivos
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 2: PROBLEMA — flip cards interactivos
+     ==================================================== -->
 <section class="slide" id="s2" data-slide="2">
   <div class="grid-bg"></div>
   <span class="section-label">01 &middot; Problema</span>
+
   <div class="slide-content">
-    <div class="tag tag-mg sr">Estado actual</div>
-    <h2 class="sr">Crear informes es<br><span class="mg">trabajo manual costoso.</span></h2>
-    <p class="sr mu" style="font-size:var(--small);margin-top:.2rem;">Haz clic en cada tarjeta para ver la solución.</p>
-    <div class="flip-grid sr">
-      <div class="flip-wrap"><div class="flip-card" id="fc1">
-        <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Tiempo perdido</div><div class="flip-desc">Horas copiando datos a slides, ajustando formatos y alineando colores a mano.</div><div class="flip-hint">[ clic para ver solución ]</div></div>
-        <div class="flip-back"><div class="flip-title cy">Generación automática</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">Claude lee los datos y construye el deck completo. El equipo solo prepara el contexto.</div></div>
-      </div></div>
-      <div class="flip-wrap"><div class="flip-card" id="fc2">
-        <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Inconsistencia visual</div><div class="flip-desc">Cada persona hace la presentación a su manera. No existe un estándar de equipo.</div><div class="flip-hint">[ clic para ver solución ]</div></div>
-        <div class="flip-back"><div class="flip-title cy">Preset del equipo</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">Un preset fijo en CLAUDE.md garantiza el mismo look en cada informe, siempre.</div></div>
-      </div></div>
-      <div class="flip-wrap"><div class="flip-card" id="fc3">
-        <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Reproceso constante</div><div class="flip-desc">Un dato cambia y hay que rehacer slides manualmente. Errores casi garantizados.</div><div class="flip-hint">[ clic para ver solución ]</div></div>
-        <div class="flip-back"><div class="flip-title cy">Regeneración en minutos</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">Actualiza el .csv y vuelve a ejecutar el comando. La presentación se rehace sola.</div></div>
-      </div></div>
-      <div class="flip-wrap"><div class="flip-card" id="fc4">
-        <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Contexto disperso</div><div class="flip-desc">La información vive en correos, Excels y chats. Nunca centralizada ni estructurada.</div><div class="flip-hint">[ clic para ver solución ]</div></div>
-        <div class="flip-back"><div class="flip-title cy">Carpeta de contexto</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">Una carpeta <span class="mono cy">/contexto</span> con archivos .md y .csv es todo lo que Claude necesita.</div></div>
-      </div></div>
+    <div class="tag tag-mg r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">Estado actual</div>
+    <h2 class="r d1">Crear informes es<br><span class="mg">trabajo manual costoso.</span></h2>
+    <p class="r d1 mu" style="font-size:var(--small);margin-top:.25rem;">Haz clic en cada tarjeta para ver la solución.</p>
+    <div class="flip-grid r d2">
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Tiempo perdido</div>
+            <div class="flip-desc">Horas copiando datos a slides, ajustando formatos, alineando colores a mano.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Generación automática</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Claude Lee los datos y construye el deck completo. El equipo solo prepara el contexto.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Inconsistencia visual</div>
+            <div class="flip-desc">Cada persona hace la presentación a su manera. No hay estándar de equipo.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Preset del equipo</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Un preset fijo en CLAUDE.md garantiza el mismo look en cada informe, siempre.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Reproceso constante</div>
+            <div class="flip-desc">Un dato cambia y hay que rehacer slides manualmente. Errores casi garantizados.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Regeneración en minutos</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Actualiza el archivo de datos y vuelve a ejecutar el comando. La presentación se rehace sola.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Contexto disperso</div>
+            <div class="flip-desc">La información vive en correos, Excels y chats. Nunca centralizada ni estructurada.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Carpeta de contexto</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Una carpeta <span class="mono cy">/contexto</span> con archivos .md y .csv es todo lo que Claude necesita.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 3 — SOLUCIÓN
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 3: SOLUCIÓN
+     ==================================================== -->
 <section class="slide" id="s3" data-slide="3">
   <div class="grid-bg"></div>
   <div class="glow" style="width:45vw;height:45vw;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,.07) 0%,transparent 65%);"></div>
   <span class="section-label">02 &middot; Solución</span>
+
   <div class="slide-content" style="position:relative;z-index:2;">
-    <div class="tag tag-cy sr" style="margin-bottom:clamp(.4rem,1vw,.875rem);">La nueva forma</div>
-    <h2 class="sr">Contexto en archivos<br><span class="cy">+ un comando =</span><br>presentación lista.</h2>
-    <div class="cmd-box sr">
-      <div><span class="c-comm"># invoca la skill desde Claude Code</span></div>
-      <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span><span class="c-arg"> Genera el informe mensual de cartera usando los archivos en /contexto</span></div>
+    <div class="tag tag-cy r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">La nueva forma</div>
+    <h2 class="r d1">Contexto en archivos<br><span class="cy">+ un comando =</span><br>presentación lista.</h2>
+
+    <div class="cmd-box r d2">
+      <div class="cmd-line"><span class="c-comm"># invoca la skill desde Claude Code</span></div>
+      <div class="cmd-line"><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span><span class="c-arg"> Genera el informe mensual de cartera usando los archivos en /contexto</span></div>
     </div>
-    <p class="sr" style="color:var(--muted);font-size:var(--body);">Claude lee los archivos, interpreta los datos y genera un HTML completo con navegación, animaciones y formato consistente — listo para abrir en el browser.</p>
+
+    <p class="r d3" style="color:var(--muted);font-size:var(--body);">
+      Claude lee los archivos, interpreta los datos y genera un HTML completo con navegación, animaciones y formato consistente — listo para abrir en el browser.
+    </p>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 4 — LOS 7 PASOS — stepper interactivo
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 4: LOS 7 PASOS — stepper interactivo
+     ==================================================== -->
 <section class="slide" id="s4" data-slide="4">
   <div class="grid-bg"></div>
   <span class="section-label">03 &middot; Los 7 pasos</span>
+
   <div class="slide-content">
-    <h2 class="sr">La skill ejecuta <span class="cy">7 pasos</span> automáticos.</h2>
-    <div class="hr sr"></div>
-    <div class="stepper sr" id="stepper">
+    <h2 class="r">La skill ejecuta <span class="cy">7 pasos</span> automáticos.</h2>
+    <div class="hr r d1"></div>
+
+    <div class="stepper r d2" id="stepper">
       <div class="step active" data-detail="Elige entre tres modos: nueva presentación desde cero, conversión de un archivo .pptx existente, o mejora de un HTML de slides ya generado.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">01</span><div><div class="step-title">Detectar el modo</div><div class="step-desc">Nueva · Conversión PPT · Mejora de slides existentes</div></div></div>
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">01</span>
+          <div><div class="step-title">Detectar el modo</div><div class="step-desc">Nueva presentación · Conversión PPT · Mejora de slides</div></div>
+        </div>
       </div>
-      <div class="step" data-detail="Pregunta solo lo mínimo: propósito del informe, extensión esperada (5-10, 10-20, 20+ slides) y el estado del contenido — notas, borradores o tema libre.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">02</span><div><div class="step-title">Descubrir el contenido</div><div class="step-desc">Propósito · Extensión · Estado del contenido</div></div></div>
+      <div class="step" data-detail="Pregunta solo lo mínimo: propósito del informe, extensión esperada (corto 5-10, medio 10-20, largo 20+) y el estado del contenido (notas, borradores o tema libre).">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">02</span>
+          <div><div class="step-title">Descubrir el contenido</div><div class="step-desc">Propósito · Extensión · Estado del contenido</div></div>
+        </div>
       </div>
-      <div class="step" data-detail="Si ya se conoce el preset, se aplica directo. Si no, genera 3 previews de un solo slide para exploración visual. El usuario elige o mezcla elementos de distintos presets.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">03</span><div><div class="step-title">Descubrir el estilo</div><div class="step-desc">3 previews visuales · Selección de preset · Mezcla de estilos</div></div></div>
+      <div class="step" data-detail="Si ya se conoce el preset, se aplica directo. Si no, genera 3 previews de un solo slide en .ecc-design/ para exploración visual. El usuario elige o mezcla.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">03</span>
+          <div><div class="step-title">Descubrir el estilo</div><div class="step-desc">3 previews visuales · Selección de preset · Mezcla de estilos</div></div>
+        </div>
       </div>
-      <div class="step" data-detail="Genera el HTML completo: estructura semántica, CSS custom properties, clase PresentationController con teclado/rueda/swipe, e IntersectionObserver para animaciones de entrada.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">04</span><div><div class="step-title">Construir la presentación</div><div class="step-desc">HTML semántico · CSS variables · JS navegación · Animaciones</div></div></div>
+      <div class="step" data-detail="Genera el HTML con estructura semántica, CSS custom properties, clase PresentationController con teclado/rueda/swipe, e IntersectionObserver para animaciones de entrada.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">04</span>
+          <div><div class="step-title">Construir la presentación</div><div class="step-desc">HTML semántico · CSS variables · JS de navegación · Animaciones</div></div>
+        </div>
       </div>
-      <div class="step" data-detail="Regla de oro: cada slide = exactamente un viewport. Usa height:100dvh, overflow:hidden y clamp() para todo. Si el contenido no cabe, divide en más slides. Nunca scroll interno.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">05</span><div><div class="step-title">Forzar viewport fit</div><div class="step-desc">100dvh · overflow:hidden · clamp() en todo · Split si no cabe</div></div></div>
+      <div class="step" data-detail="Regla de oro: cada slide = exactamente un viewport. Usa height:100dvh, overflow:hidden y clamp() para todo. Si el contenido no cabe, se divide en más slides. Nunca se hace scroll interno.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">05</span>
+          <div><div class="step-title">Forzar viewport fit</div><div class="step-desc">100dvh · overflow:hidden · clamp() en todo · Split si no cabe</div></div>
+        </div>
       </div>
-      <div class="step" data-detail="Verifica en 1920×1080, 1280×720, 768×1024, 375×667 y 667×375. Si hay automatización de browser disponible, valida que ningún slide haga scroll interno.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">06</span><div><div class="step-title">Validar en múltiples tamaños</div><div class="step-desc">Desktop · Tablet · Mobile · Landscape</div></div></div>
+      <div class="step" data-detail="Verifica visualmente en 1920×1080, 1280×720, 768×1024, 375×667 y 667×375. Si hay automatización de browser disponible, valida que ningún slide haga scroll y que la navegación funcione.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">06</span>
+          <div><div class="step-title">Validar en múltiples tamaños</div><div class="step-desc">Desktop · Tablet · Mobile · Landscape phone</div></div>
+        </div>
       </div>
-      <div class="step" data-detail="Elimina los archivos de preview temporales, abre el deck con start en Windows, y entrega la ruta, el preset usado, el número de slides y los puntos de personalización del tema.">
-        <div class="step-bar"></div><div class="step-inner"><span class="step-num">07</span><div><div class="step-title">Entregar</div><div class="step-desc">Limpia previews · Abre en browser · Resume path y opciones de tema</div></div></div>
+      <div class="step" data-detail="Elimina los archivos de preview temporales, abre el deck con el opener del OS (start en Windows), y entrega la ruta, preset usado, número de slides y puntos de personalización del tema.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">07</span>
+          <div><div class="step-title">Entregar</div><div class="step-desc">Limpia previews · Abre en browser · Resume path y customización</div></div>
+        </div>
       </div>
     </div>
-    <div class="step-detail" id="stepDetail"></div>
+    <div id="step-detail-box" class="step-detail" style="margin-top:clamp(.4rem,1vw,.75rem);"></div>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 5 — ARCHIVOS DE CONTEXTO
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 5: ARCHIVOS DE CONTEXTO
+     ==================================================== -->
 <section class="slide" id="s5" data-slide="5">
   <div class="grid-bg"></div>
   <span class="section-label">04 &middot; Contexto</span>
+
   <div class="slide-content">
-    <h2 class="sr">Estructura tu carpeta<br><span class="cy">de contexto así.</span></h2>
-    <div class="hr sr"></div>
-    <div class="two-col sr">
+    <h2 class="r">Estructura tu carpeta<br><span class="cy">de contexto así.</span></h2>
+    <div class="hr r d1"></div>
+    <div class="two-col r d2">
       <div class="card">
         <div class="file-tree">
           <div><span class="ft-dir">informe-cartera/</span></div>
@@ -622,121 +809,172 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,.82); 
           <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-hi">resumen.md</span>&nbsp;<span class="ft-cm">← propósito e instrucciones</span></div>
           <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-hi">datos.csv</span>&nbsp;<span class="ft-cm">← métricas clave</span></div>
           <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">hallazgos.md</span>&nbsp;<span class="ft-cm">← análisis del equipo</span></div>
-          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">audiencia.md</span>&nbsp;<span class="ft-cm">← para quién es</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">audiencia.md</span>&nbsp;<span class="ft-cm">← para quién es el informe</span></div>
           <div>&nbsp;&nbsp;<span class="ft-dir">assets/</span>&nbsp;<span class="ft-cm">← imágenes opcionales</span></div>
           <div>&nbsp;&nbsp;<span class="ft-hi">CLAUDE.md</span>&nbsp;<span class="ft-cm">← preset y reglas del equipo</span></div>
         </div>
       </div>
       <div class="file-desc">
-        <div class="fd-item"><div class="fd-title">resumen.md</div><div class="fd-desc">Propósito del informe, período, decisiones que se tomarán y a quién va dirigido.</div></div>
-        <div class="fd-item"><div class="fd-title">datos.csv / .xlsx</div><div class="fd-desc">Cifras concretas. Claude lee, interpreta tendencias y convierte en slides con jerarquía visual.</div></div>
-        <div class="fd-item"><div class="fd-title">CLAUDE.md</div><div class="fd-desc">Fija el preset del equipo, el tono y las reglas de formato. Claude lo aplica automáticamente.</div></div>
+        <div class="fd-item">
+          <div class="fd-title">resumen.md</div>
+          <div class="fd-desc">Propósito del informe, período, decisiones que se tomarán con él y a quién va dirigido.</div>
+        </div>
+        <div class="fd-item">
+          <div class="fd-title">datos.csv / .xlsx</div>
+          <div class="fd-desc">Cifras concretas. Claude las lee, interpreta tendencias y las convierte en slides con jerarquía visual.</div>
+        </div>
+        <div class="fd-item">
+          <div class="fd-title">CLAUDE.md</div>
+          <div class="fd-desc">Fija el preset del equipo, el tono y las reglas de formato. Claude lo aplica sin necesidad de pedirlo cada vez.</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 6 — EL COMANDO — tabs con copy
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 6: EL COMANDO — tabs con copy
+     ==================================================== -->
 <section class="slide" id="s6" data-slide="6">
   <div class="grid-bg"></div>
   <div class="glow" style="width:40vw;height:40vw;bottom:-5vw;right:-5vw;background:radial-gradient(circle,rgba(255,0,128,.1) 0%,transparent 65%);"></div>
   <span class="section-label">05 &middot; El comando</span>
+
   <div class="slide-content" style="position:relative;z-index:2;">
-    <div class="tag tag-mg sr" style="margin-bottom:clamp(.4rem,1vw,.875rem);">Tres formas de invocarlo</div>
-    <h2 class="sr">Escoge el modo<br>que se ajuste a tu caso.</h2>
-    <div class="sr">
+    <div class="tag tag-mg r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">Tres formas de invocarlo</div>
+    <h2 class="r d1">Escoge el modo<br>que se ajuste a tu caso.</h2>
+
+    <div class="r d2">
       <div class="tab-nav" id="tabNav">
-        <button class="tab-btn btn-spring active" data-tab="0">Desde notas</button>
-        <button class="tab-btn btn-spring" data-tab="1">Con preset fijo</button>
-        <button class="tab-btn btn-spring" data-tab="2">Desde PPT</button>
+        <button class="tab-btn active" data-tab="0">Desde notas</button>
+        <button class="tab-btn" data-tab="1">Con preset fijo</button>
+        <button class="tab-btn" data-tab="2">Desde PPT</button>
       </div>
+
       <div class="tab-pane active" id="tab-0">
-        <div class="code-blk"><button class="copy-btn btn-spring" onclick="copyCode(this)">copiar</button>
+        <div class="code-blk">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
           <div><span class="c-comm"># descripción libre — Claude elige el estilo</span></div>
           <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span></div>
           <div><span class="c-arg">&nbsp;&nbsp;Genera el informe mensual de cartera usando los archivos en contexto/</span></div>
         </div>
       </div>
       <div class="tab-pane" id="tab-1">
-        <div class="code-blk"><button class="copy-btn btn-spring" onclick="copyCode(this)">copiar</button>
+        <div class="code-blk">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
           <div><span class="c-comm"># especifica preset para formato consistente del equipo</span></div>
           <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span></div>
           <div><span class="c-arg">&nbsp;&nbsp;Informe julio, preset "Notebook Tabs", tono corporativo. Ver contexto/</span></div>
         </div>
       </div>
       <div class="tab-pane" id="tab-2">
-        <div class="code-blk"><button class="copy-btn btn-spring" onclick="copyCode(this)">copiar</button>
+        <div class="code-blk">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
           <div><span class="c-comm"># convierte PPT existente y mejora el diseño</span></div>
           <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span></div>
           <div><span class="c-arg">&nbsp;&nbsp;Convierte informe-julio.pptx y aplica el preset "Electric Studio"</span></div>
         </div>
       </div>
     </div>
-    <p class="sr" style="font-size:var(--small);color:var(--muted);margin-top:clamp(.5rem,1vw,.75rem);">Claude Code lee los archivos, hace las preguntas mínimas necesarias y entrega el HTML completo listo para abrir.</p>
+
+    <p class="r d3" style="font-size:var(--small);color:var(--muted);margin-top:clamp(.5rem,1vw,.75rem);">
+      Claude Code lee los archivos, hace las preguntas mínimas necesarias y entrega el HTML completo listo para abrir.
+    </p>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 7 — EL RESULTADO
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 7: EL RESULTADO
+     ==================================================== -->
 <section class="slide" id="s7" data-slide="7">
   <div class="grid-bg"></div>
   <span class="section-label">06 &middot; Resultado</span>
+
   <div class="slide-content">
-    <h2 class="sr">Un archivo HTML.<br><span class="cy">Cero dependencias.</span><br>Todo adentro.</h2>
-    <div class="hr sr"></div>
-    <ul class="result-list sr">
+    <h2 class="r">Un archivo HTML.<br><span class="cy">Cero dependencias.</span><br>Todo adentro.</h2>
+    <div class="hr r d1"></div>
+    <ul class="result-list r d2">
       <li><span class="rl-bullet">&#9657;</span><div><strong>Navegación completa</strong> — teclado (&#8592;&#8594;), rueda del mouse, swipe táctil, barra de progreso superior.</div></li>
       <li><span class="rl-bullet">&#9657;</span><div><strong>Animaciones en entrada</strong> — cada elemento aparece con timing calculado usando IntersectionObserver, sin ser ruidoso.</div></li>
       <li><span class="rl-bullet">&#9657;</span><div><strong>100% responsive</strong> — se ve igual en 4K, laptop, tablet y celular. Todo con <span class="mono cy">clamp()</span>.</div></li>
       <li><span class="rl-bullet">&#9657;</span><div><strong>Reducción de movimiento</strong> — respeta <span class="mono cy">prefers-reduced-motion</span> automáticamente.</div></li>
-      <li><span class="rl-bullet">&#9657;</span><div><strong>Abre en el browser sin servidor</strong> — doble clic al archivo. Sin instalar nada.</div></li>
+      <li><span class="rl-bullet">&#9657;</span><div><strong>Abre en el browser sin servidor</strong> — doble clic al archivo. Sin instalar nada externo.</div></li>
     </ul>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 8 — CONSISTENCIA — toggles con spring thumb
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 8: CONSISTENCIA — toggles interactivos
+     ==================================================== -->
 <section class="slide" id="s8" data-slide="8">
   <div class="grid-bg"></div>
   <span class="section-label">07 &middot; Consistencia</span>
+
   <div class="slide-content">
-    <div class="tag tag-cy sr" style="margin-bottom:clamp(.4rem,1vw,.875rem);">El verdadero valor</div>
-    <h2 class="sr">Activa el estándar<br><span class="cy">del equipo.</span></h2>
-    <div class="toggle-demo sr" id="toggleDemo">
+    <div class="tag tag-cy r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">El verdadero valor</div>
+    <h2 class="r d1">Activa el estándar<br><span class="cy">del equipo.</span></h2>
+
+    <div class="toggle-demo r d2">
       <div class="toggle-row" id="tog-1">
-        <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-1')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-        <div class="toggle-label"><div class="tl-title">Formato visual unificado</div><div class="tl-off">Cada persona elige colores y fuentes distintos.</div><div class="tl-on">Un preset en CLAUDE.md — mismo look en todos los informes del equipo.</div></div>
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-1')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Formato visual unificado</div>
+          <div class="tl-off">Cada persona elige colores y fuentes distintos.</div>
+          <div class="tl-on">Un preset en CLAUDE.md — mismo look en todos los informes del equipo.</div>
+        </div>
       </div>
       <div class="toggle-row" id="tog-2">
-        <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-2')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-        <div class="toggle-label"><div class="tl-title">Estructura de slides fija</div><div class="tl-off">Cada informe tiene un orden diferente de slides.</div><div class="tl-on">Siempre: título → problema → datos → hallazgos → próximos pasos.</div></div>
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-2')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Estructura de slides fija</div>
+          <div class="tl-off">Cada informe tiene un orden diferente de slides.</div>
+          <div class="tl-on">Siempre: título → problema → datos → hallazgos → próximos pasos.</div>
+        </div>
       </div>
       <div class="toggle-row" id="tog-3">
-        <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-3')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-        <div class="toggle-label"><div class="tl-title">Actualización instantánea</div><div class="tl-off">Un dato cambia → rehace el deck completo a mano.</div><div class="tl-on">Actualiza el .csv → ejecuta el comando → presentación rehecha en minutos.</div></div>
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-3')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Actualización instantánea</div>
+          <div class="tl-off">Un dato cambia → rehace el deck completo a mano.</div>
+          <div class="tl-on">Actualiza el .csv → ejecuta el comando → presentación rehecha en minutos.</div>
+        </div>
       </div>
       <div class="toggle-row" id="tog-4">
-        <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-4')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-        <div class="toggle-label"><div class="tl-title">Foco del equipo en el análisis</div><div class="tl-off">El equipo pierde tiempo en diseño y formato visual.</div><div class="tl-on">El equipo se enfoca en los datos. Claude decide cómo se ve.</div></div>
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-4')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Foco del equipo en el análisis</div>
+          <div class="tl-off">El equipo pierde tiempo en diseño y formato visual.</div>
+          <div class="tl-on">El equipo se enfoca en los datos. Claude decide cómo se ve.</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 9 — 12 PRESETS — selector interactivo con blur bridge
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 9: 12 PRESETS — selector interactivo
+     ==================================================== -->
 <section class="slide" id="s9" data-slide="9">
   <div class="grid-bg"></div>
   <span class="section-label">08 &middot; Estilos</span>
+
   <div class="slide-content">
-    <h2 class="sr">12 presets visuales.<br><span class="cy">Explora cada uno.</span></h2>
-    <div class="hr sr"></div>
-    <div class="preset-picker sr">
+    <h2 class="r">12 presets visuales.<br><span class="cy">Explora cada uno.</span></h2>
+    <div class="hr r d1"></div>
+
+    <div class="preset-picker r d2">
       <div class="preset-chips" id="presetChips"></div>
       <div class="preset-preview" id="presetPreview">
         <div class="pp-title" id="ppTitle">Bold Signal</div>
@@ -746,324 +984,237 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,.82); 
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 10 — FLUJO — pipeline navegable
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 10: FLUJO — pipeline clickeable
+     ==================================================== -->
 <section class="slide" id="s10" data-slide="10">
   <div class="grid-bg"></div>
   <span class="section-label">09 &middot; Flujo</span>
+
   <div class="slide-content">
-    <h2 class="sr">El flujo completo<br><span class="cy">paso a paso.</span></h2>
-    <div class="hr sr"></div>
-    <div class="pipeline sr" id="pipeline">
-      <div class="pl-step active" data-detail="Centraliza datos, hallazgos y objetivos en archivos .md y .csv dentro de una carpeta /contexto. Añade CLAUDE.md con el preset del equipo para que se aplique automáticamente en cada informe."><div class="pl-num">1</div><div class="pl-title">Prepara</div><div class="pl-sub">Contexto en archivos</div></div>
-      <div class="pl-step" data-detail="Abre Claude Code y escribe /frontend-slides seguido de una descripción del informe. Puedes apuntar directamente a la carpeta de contexto para que Claude la lea completa."><div class="pl-num">2</div><div class="pl-title">Invoca</div><div class="pl-sub">/frontend-slides</div></div>
-      <div class="pl-step" data-detail="Claude genera 3 previews visuales de un slide o aplica el preset definido en CLAUDE.md. Tú apruebas o ajustas en segundos — no hay decisiones de diseño que tomar."><div class="pl-num">3</div><div class="pl-title">Estilo</div><div class="pl-sub">Preset o 3 previews</div></div>
-      <div class="pl-step" data-detail="Claude construye el deck completo, valida que cada slide encaje en el viewport en 5 tamaños de pantalla y elimina los archivos temporales de preview. Entrega el HTML listo."><div class="pl-num">4</div><div class="pl-title">Genera</div><div class="pl-sub">Build + validación</div></div>
-      <div class="pl-step" data-detail="El archivo HTML se abre en el browser con doble clic. Sin servidor, sin dependencias, sin instalaciones. Navega con teclado, rueda del mouse o swipe. Listo para presentar."><div class="pl-num">5</div><div class="pl-title">Presenta</div><div class="pl-sub">Abre en browser</div></div>
+    <h2 class="r">El flujo completo<br><span class="cy">paso a paso.</span></h2>
+    <div class="hr r d1"></div>
+
+    <div class="pipeline r d2" id="pipeline">
+      <div class="pl-step active" data-detail="Centraliza datos, hallazgos y objetivos en archivos .md y .csv dentro de una carpeta /contexto. Añade CLAUDE.md con el preset del equipo.">
+        <div class="pl-num">1</div>
+        <div class="pl-title">Prepara</div>
+        <div class="pl-sub">Contexto en archivos</div>
+      </div>
+      <div class="pl-step" data-detail="Abre Claude Code y escribe /frontend-slides seguido de una descripción del informe. Puedes apuntar a la carpeta de contexto directamente.">
+        <div class="pl-num">2</div>
+        <div class="pl-title">Invoca</div>
+        <div class="pl-sub">/frontend-slides</div>
+      </div>
+      <div class="pl-step" data-detail="Claude genera 3 previews visuales o aplica el preset definido en CLAUDE.md. Tú apruebas o ajustas en segundos.">
+        <div class="pl-num">3</div>
+        <div class="pl-title">Estilo</div>
+        <div class="pl-sub">Preset o 3 previews</div>
+      </div>
+      <div class="pl-step" data-detail="Claude construye, valida viewport fit en 5 tamaños y elimina los archivos temporales. Entrega el HTML listo.">
+        <div class="pl-num">4</div>
+        <div class="pl-title">Genera</div>
+        <div class="pl-sub">Build + validación</div>
+      </div>
+      <div class="pl-step" data-detail="El archivo HTML se abre en el browser con doble clic. Sin servidor, sin dependencias, sin instalaciones. Listo para presentar o compartir.">
+        <div class="pl-num">5</div>
+        <div class="pl-title">Presenta</div>
+        <div class="pl-sub">Abre en browser</div>
+      </div>
     </div>
-    <div class="pl-detail sr" id="plDetail">Haz clic en cada etapa para ver el detalle.</div>
-    <div class="pl-controls sr">
-      <button class="pl-btn pl-prev btn-spring" onclick="pipelineNav(-1)">&#8592; anterior</button>
-      <button class="pl-btn pl-next btn-spring" onclick="pipelineNav(1)">siguiente &#8594;</button>
+
+    <div class="pl-detail r d3" id="plDetail">
+      Haz clic en cada etapa para ver el detalle.
+    </div>
+
+    <div class="pl-controls r d3">
+      <button class="pl-btn pl-prev" onclick="pipelineNav(-1)">&#8592; anterior</button>
+      <button class="pl-btn pl-next" onclick="pipelineNav(1)">siguiente &#8594;</button>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 11 — BENEFICIOS
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 11: BENEFICIOS
+     ==================================================== -->
 <section class="slide" id="s11" data-slide="11">
   <div class="grid-bg"></div>
   <span class="section-label">10 &middot; Beneficios</span>
+
   <div class="slide-content">
-    <h2 class="sr">Lo que gana el equipo<br><span class="cy">desde el primer informe.</span></h2>
-    <div class="hr sr"></div>
-    <div class="ben-grid sr">
-      <div class="ben-card"><div class="ben-mark"></div><div class="ben-title">Horas devueltas</div><div class="ben-desc">De 3-4 h de armado manual a ~15 min de preparar contexto.</div></div>
-      <div class="ben-card"><div class="ben-mark"></div><div class="ben-title">Calidad profesional</div><div class="ben-desc">Tipografía, animaciones y layout de nivel diseñador, siempre.</div></div>
-      <div class="ben-card"><div class="ben-mark"></div><div class="ben-title">Actualizaciones rápidas</div><div class="ben-desc">Cambia el dato, regenera, listo. Sin reproceso manual.</div></div>
-      <div class="ben-card"><div class="ben-mark"></div><div class="ben-title">Estándar de equipo</div><div class="ben-desc">Todos los informes con una sola identidad visual.</div></div>
-      <div class="ben-card"><div class="ben-mark"></div><div class="ben-title">Sin herramientas externas</div><div class="ben-desc">Un HTML que abre en cualquier browser. Cero licencias.</div></div>
-      <div class="ben-card"><div class="ben-mark"></div><div class="ben-title">Foco en el análisis</div><div class="ben-desc">El equipo piensa en los datos. Claude decide cómo se ven.</div></div>
+    <h2 class="r">Lo que gana el equipo<br><span class="cy">desde el primer informe.</span></h2>
+    <div class="hr r d1"></div>
+    <div class="ben-grid r d2">
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Horas devueltas</div>
+        <div class="ben-desc">De 3-4 h de armado manual a ~15 min de preparar contexto.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Calidad profesional</div>
+        <div class="ben-desc">Tipografía, animaciones y layout de nivel diseñador, siempre.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Actualizaciones rápidas</div>
+        <div class="ben-desc">Cambia el dato, regenera, listo. Sin reproceso manual.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Estándar de equipo</div>
+        <div class="ben-desc">Todos los informes con una sola identidad visual.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Sin herramientas externas</div>
+        <div class="ben-desc">Un HTML que abre en cualquier browser. Cero licencias.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Foco en el análisis</div>
+        <div class="ben-desc">El equipo piensa en los datos. Claude decide cómo se ven.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
-     SLIDE 12 — CTA
-     ============================================================ -->
+<!-- ====================================================
+     SLIDE 12: CTA
+     ==================================================== -->
 <section class="slide" id="s12" data-slide="12">
   <div class="grid-bg"></div>
   <div class="cta-glow"></div>
+
   <div class="cta-inner">
-    <div class="tag tag-cy sr">Empieza hoy</div>
-    <h2 class="grad sr">Tu próximo<br>informe,<br>así.</h2>
-    <p class="cta-sub sr">Crea un archivo <span class="mono cy">contexto/resumen.md</span> con el propósito de tu informe y ejecuta:</p>
-    <div class="cta-cmd sr btn-spring" id="ctaCmd" onclick="copyCta(this)">
+    <div class="tag tag-cy r">Empieza hoy</div>
+    <h2 class="grad r d1">Tu próximo<br>informe,<br>así.</h2>
+    <p class="cta-sub r d2">Crea un archivo <span class="mono cy">contexto/resumen.md</span> con el propósito de tu informe y ejecuta:</p>
+    <div class="cta-cmd r d3" id="ctaCmd" onclick="copyCta(this)">
       <span class="c-prompt">$ </span>/frontend-slides &nbsp;[describe tu informe]
       <div class="copied-msg">copiado al portapapeles</div>
     </div>
-    <p class="tip sr">Guarda el preset en <span class="mono cy">CLAUDE.md</span> para que sea el formato oficial — sin pedirlo cada vez.</p>
+    <p class="claude-md-tip r d4">
+      Guarda el preset preferido del equipo en <span class="mono cy">CLAUDE.md</span> para que sea el formato oficial de todos los informes — sin tener que pedirlo cada vez.
+    </p>
   </div>
 </section>
 
 </main>
 
 <script>
-'use strict';
-
 // ============================================================
-// SPRING ENGINE
-// Emil: spring animations for natural motion (ease-spring-natural)
-// Emil: duration + bounce mental model (ease-spring-config)
-// Implemented as vanilla JS spring physics for zero-dependency HTML
+// PRESENTATION CONTROLLER
 // ============================================================
-class Spring {
-  constructor(initial = 0, { stiffness = 200, damping = 26 } = {}) {
-    this.x  = initial;
-    this.v  = 0;
-    this.k  = stiffness;
-    this.b  = damping;
-    this.target = initial;
-    this._raf = null;
-    this._cbs = new Set();
-  }
-
-  onChange(fn) { this._cbs.add(fn); return this; }
-
-  to(target) {
-    this.target = target;
-    if (!this._raf) this._tick(performance.now());
-    return this;
-  }
-
-  set(value) {
-    this.x = value; this.v = 0; this.target = value;
-    this._cbs.forEach(fn => fn(value));
-  }
-
-  _tick(last) {
-    this._raf = requestAnimationFrame(now => {
-      const dt = Math.min(now - last, 64) / 1000;
-      const F = -this.k * (this.x - this.target) - this.b * this.v;
-      this.v += F * dt;
-      this.x += this.v * dt;
-      this._cbs.forEach(fn => fn(this.x));
-      const atRest = Math.abs(this.x - this.target) < 0.002
-                  && Math.abs(this.v) < 0.002;
-      if (atRest) { this.x = this.target; this._cbs.forEach(fn=>fn(this.x)); this._raf = null; }
-      else this._tick(now);
-    });
-  }
-
-  stop() { if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; } }
-}
-
-// ============================================================
-// DRAGGABLE 3D CUBE
-// Emil: interruptible drag (interact-interruptible)
-// Emil: damped resistance at boundaries (interact-damping)
-// Emil: momentum carry after release (interact-momentum-dismiss)
-// Emil: pointer capture for reliable drag (interact-pointer-capture)
-// ============================================================
-(function initCube() {
-  const scene = document.getElementById('cubeScene');
-  const cube  = document.getElementById('cube3d');
-  if (!cube) return;
-
-  // Spring for auto-rotation return
-  const springY = new Spring(0, { stiffness: 80, damping: 14 });
-  const springX = new Spring(15, { stiffness: 80, damping: 14 });
-
-  let rotX = 15, rotY = 0;
-  let autoAngle = 0;
-  let isDragging = false;
-  let lastPX = 0, lastPY = 0;
-  let velX = 0, velY = 0;
-  let autoActive = true;
-  let autoResumeTimer = null;
-  let lastTime = null;
-
-  // RAF loop — always running, drives spring or momentum
-  function tick(now) {
-    const dt = lastTime ? Math.min(now - lastTime, 64) : 16;
-    lastTime = now;
-
-    if (!isDragging) {
-      if (autoActive) {
-        // Resume auto-rotation: spring toward ever-advancing angle
-        autoAngle += dt * 0.025;
-        // Smoothly nudge rotY toward autoAngle via spring
-        springY.target = autoAngle;
-        springX.target = 15;
-        // Directly apply spring-computed values
-        rotY += (springY.x - rotY) * 0.08;
-        rotX += (springX.x - rotX) * 0.08;
-      } else {
-        // Momentum decay after drag
-        velX *= 0.92; velY *= 0.92;
-        rotX += velX; rotY += velY;
-        // Clamp X rotation for natural feel
-        rotX = Math.max(-40, Math.min(40, rotX));
-      }
-    }
-
-    cube.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  function startDrag(e) {
-    isDragging = true;
-    autoActive = false;
-    clearTimeout(autoResumeTimer);
-    lastPX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
-    lastPY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
-    velX = 0; velY = 0;
-    scene.setPointerCapture?.(e.pointerId);
-  }
-
-  function onDrag(e) {
-    if (!isDragging) return;
-    const px = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
-    const py = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
-    const dx = px - lastPX;
-    const dy = py - lastPY;
-    // Damped resistance on extreme X tilt (interact-damping)
-    const xLimit = 40;
-    if ((rotX > xLimit && dy < 0) || (rotX < -xLimit && dy > 0)) {
-      rotX += dy * 0.08 * 0.3; // 70% resistance
-    } else {
-      rotX += dy * 0.4;
-    }
-    rotY += dx * 0.6;
-    velX = dy * 0.4; velY = dx * 0.6;
-    lastPX = px; lastPY = py;
-  }
-
-  function endDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    // Resume auto-rotate after 2.5s idle
-    autoResumeTimer = setTimeout(() => {
-      autoAngle = rotY; // sync so there's no jump
-      springY.set(rotY);
-      autoActive = true;
-    }, 2500);
-  }
-
-  scene.addEventListener('pointerdown',  startDrag);
-  scene.addEventListener('pointermove',  onDrag);
-  scene.addEventListener('pointerup',    endDrag);
-  scene.addEventListener('pointercancel',endDrag);
-})();
-
-// ============================================================
-// FLIP CARDS — spring-out CSS curve + blur bridge at midpoint
-// Emil: blur(2px) bridges the midpoint visual gap (polish-blur-bridge)
-// Emil: CSS transition is interruptible (interact-interruptible)
-// ============================================================
-document.querySelectorAll('.flip-card').forEach(card => {
-  card.addEventListener('click', () => {
-    // Brief blur at start of flip to bridge states (polish-blur-bridge)
-    card.style.filter = 'blur(3px)';
-    card.style.transition = 'transform 540ms cubic-bezier(0.34,1.56,0.64,1), filter 120ms ease-out';
-    setTimeout(() => {
-      card.style.filter = '';
-    }, 130);
-    card.classList.toggle('flipped');
-  });
-});
-
-// ============================================================
-// BUTTON PRESS — scale(0.97), asymmetric timing
-// Emil: 150ms press (slow), 100ms release (fast) (timing-asymmetric)
-// Emil: scale(0.97) for tactile feedback (transform-scale-097)
-// ============================================================
-document.querySelectorAll('.btn-spring').forEach(el => {
-  function press() {
-    el.style.transition = 'transform 150ms cubic-bezier(0.23,1,0.32,1)'; // slow press
-    el.style.transform  = 'scale(0.97)';
-  }
-  function release() {
-    el.style.transition = 'transform 100ms cubic-bezier(0.23,1,0.32,1)'; // fast release
-    el.style.transform  = '';
-  }
-  el.addEventListener('pointerdown', press);
-  el.addEventListener('pointerup',   release);
-  el.addEventListener('pointerleave',release);
-});
-
-// ============================================================
-// STAGGERED SPRING REVEALS
-// Emil: stagger 50ms between children (polish-stagger-children)
-// Emil: only transform + opacity (props-transform-opacity)
-// ============================================================
-class RevealManager {
+class PresentationController {
   constructor() {
-    this.observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) this._reveal(e.target); }),
-      { threshold: 0.45 }
-    );
-    document.querySelectorAll('.slide').forEach(s => this.observer.observe(s));
+    this.slides = Array.from(document.querySelectorAll('.slide'));
+    this.total  = this.slides.length;
+    this.cur    = 0;
+    this.bar    = document.getElementById('progressBar');
+    this.ctr    = document.getElementById('slideCounter');
+
+    this.setupReveal();
+    this.setupNav();
+    this.updateUI();
+    setTimeout(() => this.revealSlide(0), 120);
   }
 
-  _reveal(slide) {
-    const elements = slide.querySelectorAll('.sr');
-    elements.forEach((el, i) => {
-      // 50ms stagger (polish-stagger-children)
-      el.style.transitionDelay = `${i * 50}ms`;
-      // rAF ensures class is added after layout (avoids FOUC)
-      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('on')));
+  setupReveal() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const i = this.slides.indexOf(e.target);
+          if (i !== -1) { this.cur = i; this.updateUI(); this.revealSlide(i); }
+        }
+      });
+    }, { threshold: 0.5 });
+    this.slides.forEach(s => obs.observe(s));
+  }
+
+  revealSlide(i) {
+    const s = this.slides[i];
+    if (!s) return;
+    s.querySelectorAll('.r').forEach(el => el.classList.add('on'));
+  }
+
+  updateUI() {
+    this.bar.style.width = ((this.cur+1)/this.total*100)+'%';
+    this.ctr.textContent = String(this.cur+1).padStart(2,'0')+' / '+String(this.total).padStart(2,'0');
+  }
+
+  goTo(i) {
+    if (i < 0 || i >= this.total) return;
+    this.slides[i].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  setupNav() {
+    document.addEventListener('keydown', e => {
+      if (['ArrowDown','ArrowRight',' '].includes(e.key)) { e.preventDefault(); this.goTo(this.cur+1); }
+      if (['ArrowUp','ArrowLeft'].includes(e.key))        { e.preventDefault(); this.goTo(this.cur-1); }
+      if (e.key==='Home') this.goTo(0);
+      if (e.key==='End')  this.goTo(this.total-1);
     });
+
+    let wcd = false;
+    window.addEventListener('wheel', e => {
+      if (wcd) return; wcd = true;
+      e.deltaY > 0 ? this.goTo(this.cur+1) : this.goTo(this.cur-1);
+      setTimeout(()=>{ wcd=false; }, 800);
+    }, { passive: true });
+
+    let ty=0, tx=0;
+    window.addEventListener('touchstart', e=>{ ty=e.touches[0].clientY; tx=e.touches[0].clientX; }, {passive:true});
+    window.addEventListener('touchend',   e=>{
+      const dy=ty-e.changedTouches[0].clientY, dx=tx-e.changedTouches[0].clientX;
+      if (Math.abs(dy)>Math.abs(dx) && Math.abs(dy)>40) dy>0 ? this.goTo(this.cur+1) : this.goTo(this.cur-1);
+    }, {passive:true});
   }
 }
-new RevealManager();
 
 // ============================================================
 // SLIDE 4 — STEPPER
 // ============================================================
-(function() {
+(function(){
   const steps   = document.querySelectorAll('#stepper .step');
-  const detBox  = document.getElementById('stepDetail');
+  const detBox  = document.getElementById('step-detail-box');
 
-  function activate(el) {
+  function activateStep(el) {
     steps.forEach(s => s.classList.remove('active'));
     el.classList.add('active');
-    detBox.classList.remove('open');
-    // small delay so the CSS transition triggers (not instant)
-    requestAnimationFrame(() => {
-      detBox.textContent = el.dataset.detail;
-      detBox.classList.add('open');
-    });
+    detBox.textContent = el.dataset.detail;
+    detBox.classList.add('open');
   }
 
-  steps.forEach(s => s.addEventListener('click', () => activate(s)));
-  activate(steps[0]);
+  steps.forEach(s => {
+    s.addEventListener('click', () => activateStep(s));
+  });
+
+  // Show detail for first active step on load
+  activateStep(steps[0]);
 })();
 
 // ============================================================
-// SLIDE 6 — TABS + COPY
+// SLIDE 6 — TABS
 // ============================================================
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const nav   = btn.closest('.tab-nav');
-    const panes = btn.closest('.sr').querySelectorAll('.tab-pane');
+    const panes = btn.closest('.r').querySelectorAll('.tab-pane');
     nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     panes.forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   });
 });
 
 function copyCode(btn) {
-  const lines = btn.closest('.code-blk').querySelectorAll('div');
-  const text  = Array.from(lines).map(d => d.innerText).join('\n').trim();
-  navigator.clipboard.writeText(text).catch(() => {});
+  const blk  = btn.closest('.code-blk');
+  const text = blk.innerText.replace('copiar','').replace('copiado','').trim();
+  navigator.clipboard.writeText(text).catch(()=>{});
   btn.textContent = 'copiado';
   btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+  setTimeout(()=>{ btn.textContent='copiar'; btn.classList.remove('copied'); }, 2000);
 }
 
 // ============================================================
@@ -1074,175 +1225,85 @@ function toggleRow(inp, id) {
 }
 
 // ============================================================
-// SLIDE 9 — PRESET PICKER with blur bridge
-// Emil: blur(4px) bridges the transition between presets (polish-blur-bridge)
-// Emil: spring scale pop on chip selection
+// SLIDE 9 — PRESET PICKER
 // ============================================================
 const PRESETS = [
-  { name:'Bold Signal',      sub:'pitch · lanzamiento · impacto',          bg:'#0f0804', fg:'#ff6b00' },
-  { name:'Electric Studio',  sub:'revisiones estratégicas · clientes',     bg:'#000',    fg:'#4f6ef7' },
-  { name:'Creative Voltage', sub:'marca · producto · storytelling',        bg:'#060820', fg:'#ffe600' },
-  { name:'Dark Botanical',   sub:'premium · narrativa · lujo',             bg:'#0c0908', fg:'#c8a96e' },
-  { name:'Notebook Tabs',    sub:'reportes · revisiones estructuradas',    bg:'#2a2825', fg:'#d4b483' },
-  { name:'Pastel Geometry',  sub:'onboarding · producto · amigable',       bg:'#e8f4fd', fg:'#6a9fd8' },
-  { name:'Split Pastel',     sub:'agencias · workshops · portfolios',      bg:'#f9ede6', fg:'#b088c0' },
-  { name:'Vintage Editorial',sub:'charlas · narrativas opinionadas',       bg:'#f5f0e0', fg:'#8b4513' },
-  { name:'Neon Cyber',       sub:'IA · infraestructura · dev tools',       bg:'#030712', fg:'#00d4ff' },
-  { name:'Terminal Green',   sub:'APIs · CLI · demos de ingeniería',       bg:'#0d1117', fg:'#39d353' },
-  { name:'Swiss Modern',     sub:'corporativo · estrategia · analytics',   bg:'#fff',    fg:'#e00'    },
-  { name:'Paper & Ink',      sub:'ensayos · keynotes · manifiestos',       bg:'#faf6ed', fg:'#9b2335' },
+  { name:'Bold Signal',      sub:'pitch · lanzamiento · impacto',         bg:'#0f0804', fg:'#ff6b00', text:'#fff' },
+  { name:'Electric Studio',  sub:'revisiones estratégicas · clientes',    bg:'#000',    fg:'#4f6ef7', text:'#fff' },
+  { name:'Creative Voltage', sub:'marca · producto · storytelling',       bg:'#060820', fg:'#ffe600', text:'#fff' },
+  { name:'Dark Botanical',   sub:'premium · narrativa · lujo',            bg:'#0c0908', fg:'#c8a96e', text:'#f5f0e8' },
+  { name:'Notebook Tabs',    sub:'reportes · revisiones estructuradas',   bg:'#2a2825', fg:'#d4b483', text:'#fef8ef' },
+  { name:'Pastel Geometry',  sub:'onboarding · producto · amigable',      bg:'#e8f4fd', fg:'#6a9fd8', text:'#1a2a3a' },
+  { name:'Split Pastel',     sub:'agencias · workshops · portfolios',     bg:'#f9ede6', fg:'#b088c0', text:'#2a1a2a' },
+  { name:'Vintage Editorial',sub:'charlas · narrativas opinionadas',      bg:'#f5f0e0', fg:'#8b4513', text:'#1a0a00' },
+  { name:'Neon Cyber',       sub:'IA · infraestructura · dev tools',      bg:'#030712', fg:'#00d4ff', text:'#f0f6ff' },
+  { name:'Terminal Green',   sub:'APIs · CLI · demos de ingeniería',      bg:'#0d1117', fg:'#39d353', text:'#e6edf3' },
+  { name:'Swiss Modern',     sub:'corporativo · estrategia · analytics',  bg:'#fff',    fg:'#e00',    text:'#111'   },
+  { name:'Paper & Ink',      sub:'ensayos · keynotes · manifiestos',      bg:'#faf6ed', fg:'#9b2335', text:'#1a1008' },
 ];
 
-(function() {
+(function(){
   const chips   = document.getElementById('presetChips');
   const preview = document.getElementById('presetPreview');
-  const title   = document.getElementById('ppTitle');
-  const sub     = document.getElementById('ppSub');
-  let current   = 0;
+  const ppTitle = document.getElementById('ppTitle');
+  const ppSub   = document.getElementById('ppSub');
 
   PRESETS.forEach((p, i) => {
     const c = document.createElement('button');
-    c.className = 'p-chip btn-spring' + (i === 0 ? ' sel' : '');
+    c.className = 'p-chip' + (i===0?' sel':'');
     c.textContent = p.name;
     c.addEventListener('click', () => {
-      if (i === current) return;
-      // spring pop on selected chip
-      c.style.transition = 'transform 300ms cubic-bezier(0.34,1.56,0.64,1)';
-      c.style.transform  = 'scale(1.15)';
-      setTimeout(() => { c.style.transform = ''; }, 0);
-      chips.querySelectorAll('.p-chip').forEach(x => x.classList.remove('sel'));
+      chips.querySelectorAll('.p-chip').forEach(x=>x.classList.remove('sel'));
       c.classList.add('sel');
-      current = i;
       applyPreset(p);
     });
     chips.appendChild(c);
   });
 
   function applyPreset(p) {
-    // Blur bridge: blur → swap → unblur (polish-blur-bridge)
-    preview.classList.add('swapping');
-    setTimeout(() => {
-      preview.style.background   = p.bg;
-      preview.style.borderColor  = p.fg + '55';
-      preview.style.boxShadow    = `0 0 30px ${p.fg}22`;
-      title.style.color  = p.fg;
-      title.textContent  = p.name;
-      sub.textContent    = p.sub;
-      preview.classList.remove('swapping');
-    }, 180);
+    preview.style.background = p.bg;
+    preview.style.borderColor = p.fg+'55';
+    preview.style.boxShadow  = '0 0 30px '+p.fg+'22';
+    ppTitle.style.color  = p.fg;
+    ppTitle.textContent  = p.name;
+    ppSub.style.color    = p.text+'99';
+    ppSub.textContent    = p.sub;
   }
-
   applyPreset(PRESETS[0]);
 })();
 
 // ============================================================
 // SLIDE 10 — PIPELINE
-// Emil: spring-in on active step (spring-out CSS curve)
 // ============================================================
 const plSteps  = Array.from(document.querySelectorAll('#pipeline .pl-step'));
 const plDetail = document.getElementById('plDetail');
 let plActive   = 0;
 
 function setPlStep(i) {
-  plActive = Math.max(0, Math.min(i, plSteps.length - 1));
+  plActive = Math.max(0, Math.min(i, plSteps.length-1));
   plSteps.forEach((s, idx) => {
-    s.classList.remove('active', 'done');
+    s.classList.remove('active','done');
     if (idx === plActive) s.classList.add('active');
     else if (idx < plActive) s.classList.add('done');
   });
-  // Spring-in on detail text
-  plDetail.style.opacity   = '0';
-  plDetail.style.transform = 'translateY(8px)';
-  requestAnimationFrame(() => {
-    plDetail.style.transition = 'opacity 250ms cubic-bezier(0.23,1,0.32,1), transform 320ms cubic-bezier(0.34,1.56,0.64,1)';
-    plDetail.style.opacity    = '1';
-    plDetail.style.transform  = 'none';
-    plDetail.textContent      = plSteps[plActive].dataset.detail;
-  });
+  plDetail.textContent = plSteps[plActive].dataset.detail;
 }
 
-plSteps.forEach((s, i) => s.addEventListener('click', () => setPlStep(i)));
-function pipelineNav(dir) { setPlStep(plActive + dir); }
+plSteps.forEach((s,i) => s.addEventListener('click', ()=>setPlStep(i)));
 setPlStep(0);
+
+function pipelineNav(dir) { setPlStep(plActive+dir); }
 
 // ============================================================
 // SLIDE 12 — COPY CTA
 // ============================================================
 function copyCta(el) {
-  navigator.clipboard.writeText('/frontend-slides [describe tu informe]').catch(() => {});
+  navigator.clipboard.writeText('/frontend-slides [describe tu informe]').catch(()=>{});
   el.classList.add('copied');
-  setTimeout(() => el.classList.remove('copied'), 2000);
+  setTimeout(()=>el.classList.remove('copied'), 2000);
 }
 
-// ============================================================
-// PRESENTATION CONTROLLER
-// Emil: keyboard navigation — no spring on scroll (strategy-keyboard-no-animate)
-// Emil: wheel/swipe — keep scroll-snap for reliable cross-browser nav
-// ============================================================
-class PresentationController {
-  constructor() {
-    this.slides = Array.from(document.querySelectorAll('.slide'));
-    this.total  = this.slides.length;
-    this.cur    = 0;
-    this.bar    = document.getElementById('progressBar');
-    this.ctr    = document.getElementById('slideCounter');
-
-    this._trackCurrent();
-    this._setupNav();
-    this._updateUI();
-  }
-
-  _trackCurrent() {
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          const i = this.slides.indexOf(e.target);
-          if (i !== -1) { this.cur = i; this._updateUI(); }
-        }
-      });
-    }, { threshold: 0.5 });
-    this.slides.forEach(s => obs.observe(s));
-  }
-
-  _updateUI() {
-    this.bar.style.width    = ((this.cur + 1) / this.total * 100) + '%';
-    this.ctr.textContent    = String(this.cur + 1).padStart(2,'0') + ' / ' + String(this.total).padStart(2,'0');
-  }
-
-  goTo(i) {
-    if (i < 0 || i >= this.total) return;
-    this.slides[i].scrollIntoView({ behavior: 'smooth' });
-  }
-
-  _setupNav() {
-    // Keyboard — Emil: no spring on keyboard-initiated nav (strategy-keyboard-no-animate)
-    document.addEventListener('keydown', e => {
-      if (['ArrowDown','ArrowRight',' '].includes(e.key)) { e.preventDefault(); this.goTo(this.cur + 1); }
-      if (['ArrowUp','ArrowLeft'].includes(e.key))        { e.preventDefault(); this.goTo(this.cur - 1); }
-      if (e.key === 'Home') this.goTo(0);
-      if (e.key === 'End')  this.goTo(this.total - 1);
-    });
-
-    // Wheel with cooldown
-    let wcd = false;
-    window.addEventListener('wheel', e => {
-      if (wcd) return; wcd = true;
-      e.deltaY > 0 ? this.goTo(this.cur + 1) : this.goTo(this.cur - 1);
-      setTimeout(() => { wcd = false; }, 800);
-    }, { passive: true });
-
-    // Touch swipe
-    let ty = 0, tx = 0;
-    window.addEventListener('touchstart', e => { ty = e.touches[0].clientY; tx = e.touches[0].clientX; }, { passive: true });
-    window.addEventListener('touchend',   e => {
-      const dy = ty - e.changedTouches[0].clientY;
-      const dx = tx - e.changedTouches[0].clientX;
-      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 40)
-        dy > 0 ? this.goTo(this.cur + 1) : this.goTo(this.cur - 1);
-    }, { passive: true });
-  }
-}
-
+// Boot
 document.addEventListener('DOMContentLoaded', () => new PresentationController());
 </script>
 </body>
