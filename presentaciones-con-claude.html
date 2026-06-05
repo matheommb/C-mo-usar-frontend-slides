@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentaciones con Claude Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   VIEWPORT FITTING: MANDATORY BASE STYLES
+   =========================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+  padding: var(--slide-padding);
+}
+
+:root {
+  --title-size: clamp(1.5rem, 5vw, 4rem);
+  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.65rem, 1vw, 0.875rem);
+  --slide-padding: clamp(1rem, 5vw, 5rem);
+  --content-gap: clamp(0.5rem, 2vw, 2rem);
+  --element-gap: clamp(0.25rem, 1vw, 1rem);
+
+  /* Neon Cyber palette */
+  --bg: #030712;
+  --bg2: #0a0f1e;
+  --cyan: #00d4ff;
+  --magenta: #ff0080;
+  --white: #f0f6ff;
+  --muted: #6b7a9e;
+  --card-bg: rgba(0, 212, 255, 0.04);
+  --card-border: rgba(0, 212, 255, 0.15);
+  --grid-line: rgba(0, 212, 255, 0.06);
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Satoshi', system-ui, sans-serif;
+}
+
+@media (max-height: 700px) {
+  :root {
+    --slide-padding: clamp(0.75rem, 3vw, 2rem);
+    --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+    --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+    --h2-size: clamp(1rem, 3vw, 1.75rem);
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+    --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+    --title-size: clamp(1.1rem, 4vw, 2rem);
+    --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+  }
+  .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+
+@media (max-height: 500px) {
+  :root {
+    --slide-padding: clamp(0.4rem, 2vw, 1rem);
+    --title-size: clamp(1rem, 3.5vw, 1.5rem);
+    --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+    --body-size: clamp(0.65rem, 1vw, 0.85rem);
+  }
+}
+
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+  .grid-3 { grid-template-columns: 1fr !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.2s !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ===========================================
+   GRID BACKGROUND
+   =========================================== */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: clamp(30px, 5vw, 60px) clamp(30px, 5vw, 60px);
+  pointer-events: none;
+}
+
+/* ===========================================
+   GLOW EFFECTS
+   =========================================== */
+.glow-cyan {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.glow-magenta {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,0,128,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+h1 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: var(--title-size);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: var(--h2-size);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: 'Satoshi', sans-serif;
+  font-size: var(--h3-size);
+  font-weight: 700;
+}
+
+p, li {
+  font-size: var(--body-size);
+  line-height: 1.6;
+  color: rgba(240, 246, 255, 0.85);
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.7rem, 1.3vw, 1rem);
+}
+
+.accent-cyan { color: var(--cyan); }
+.accent-magenta { color: var(--magenta); }
+.muted { color: var(--muted); }
+
+/* ===========================================
+   CARDS & CONTAINERS
+   =========================================== */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: clamp(8px, 1vw, 16px);
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  backdrop-filter: blur(8px);
+}
+
+.card-glow {
+  border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 clamp(15px, 2vw, 30px) rgba(0,212,255,0.12),
+              inset 0 0 clamp(15px, 2vw, 30px) rgba(0,212,255,0.04);
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  border-radius: 100px;
+  font-size: var(--small-size);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tag-cyan {
+  background: rgba(0,212,255,0.12);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cyan);
+}
+
+.tag-magenta {
+  background: rgba(255,0,128,0.12);
+  border: 1px solid rgba(255,0,128,0.3);
+  color: var(--magenta);
+}
+
+/* ===========================================
+   CODE BLOCK
+   =========================================== */
+.code-block {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 8px;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
+  line-height: 1.7;
+  overflow: hidden;
+}
+
+.code-block .comment { color: #4a5568; }
+.code-block .keyword { color: var(--cyan); }
+.code-block .string { color: #a8ff78; }
+.code-block .prompt { color: var(--magenta); }
+
+/* ===========================================
+   PROGRESS & NAVIGATION
+   =========================================== */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  transition: width 0.4s ease;
+  z-index: 100;
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.slide-counter {
+  position: fixed;
+  bottom: clamp(1rem, 2vw, 2rem);
+  right: clamp(1rem, 2vw, 2rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--small-size);
+  color: var(--muted);
+  z-index: 100;
+  letter-spacing: 0.1em;
+}
+
+.keyboard-hint {
+  position: fixed;
+  bottom: clamp(1rem, 2vw, 2rem);
+  left: clamp(1rem, 2vw, 2rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--small-size);
+  color: var(--muted);
+  z-index: 100;
+  opacity: 0.6;
+}
+
+/* ===========================================
+   REVEAL ANIMATIONS
+   =========================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+/* Scan line animation */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.blink { animation: blink 1.2s infinite; }
+.float { animation: float 4s ease-in-out infinite; }
+.pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
+
+/* ===========================================
+   SLIDE-SPECIFIC STYLES
+   =========================================== */
+
+/* --- SLIDE 1: Title --- */
+#slide-1 {
+  background: var(--bg);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#slide-1 .scanline {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  animation: scanline 4s linear infinite;
+  opacity: 0.3;
+}
+
+#slide-1 .title-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+#slide-1 .eyebrow-line {
+  width: clamp(20px, 3vw, 40px);
+  height: 1px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+#slide-1 h1 {
+  max-width: 18ch;
+  margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+#slide-1 h1 .gradient-text {
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#slide-1 .subtitle {
+  font-size: clamp(0.85rem, 1.8vw, 1.25rem);
+  color: rgba(240,246,255,0.6);
+  max-width: 42ch;
+  margin-bottom: clamp(1rem, 3vw, 2.5rem);
+}
+
+#slide-1 .bottom-stat {
+  display: flex;
+  gap: clamp(1rem, 3vw, 3rem);
+  margin-top: clamp(1rem, 2vw, 2rem);
+}
+
+#slide-1 .stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+#slide-1 .stat-num {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+#slide-1 .stat-label {
+  font-size: var(--small-size);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* --- SLIDE 2: Problem --- */
+#slide-2 {
+  background: var(--bg2);
+}
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin-top: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.pain-item {
+  background: rgba(255, 0, 128, 0.05);
+  border: 1px solid rgba(255, 0, 128, 0.15);
+  border-radius: 10px;
+  padding: clamp(0.75rem, 1.5vw, 1.25rem);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.pain-icon {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  flex-shrink: 0;
+  margin-top: 0.1em;
+}
+
+.pain-title {
+  font-size: clamp(0.8rem, 1.3vw, 1rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.25rem;
+}
+
+.pain-desc {
+  font-size: var(--small-size);
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* --- SLIDE 3: Solution Overview --- */
+#slide-3 .hero-command {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 12px;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  margin: clamp(1rem, 2vw, 2rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#slide-3 .hero-command::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+#slide-3 .hero-command .prompt-symbol {
+  color: var(--magenta);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.7rem, 1.3vw, 1rem);
+}
+
+#slide-3 .hero-command .cmd-text {
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.7rem, 1.3vw, 1rem);
+}
+
+/* --- SLIDE 4: How the Skill Works --- */
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.step-num {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--cyan);
+  opacity: 0.4;
+  min-width: 2ch;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.step-content { flex: 1; }
+.step-title {
+  font-size: clamp(0.8rem, 1.4vw, 1.05rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.2rem;
+}
+
+.step-desc {
+  font-size: var(--small-size);
+  color: var(--muted);
+}
+
+/* --- SLIDE 5: Context Files --- */
+.file-tree {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
+  line-height: 1.9;
+  color: rgba(240,246,255,0.85);
+}
+
+.file-tree .dir { color: var(--cyan); }
+.file-tree .file { color: rgba(240,246,255,0.7); }
+.file-tree .comment-ft { color: var(--muted); }
+.file-tree .highlight-file { color: #a8ff78; font-weight: 600; }
+
+/* --- SLIDE 6: The Command --- */
+#slide-6 .big-command {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.75rem, 1.8vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--cyan);
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 12px;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  margin: clamp(0.75rem, 1.5vw, 1.5rem) 0;
+}
+
+/* --- SLIDE 7: The Result --- */
+.result-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1vw, 0.75rem);
+  margin-top: clamp(0.75rem, 1.5vw, 1.5rem);
+}
+
+.result-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: var(--body-size);
+  color: rgba(240,246,255,0.85);
+}
+
+.result-list .bullet {
+  color: var(--cyan);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.05em;
+}
+
+/* --- SLIDE 8: Consistency --- */
+.consistency-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin-top: clamp(0.75rem, 1.5vw, 1.5rem);
+}
+
+@media (max-width: 700px) {
+  .consistency-grid { grid-template-columns: 1fr; }
+}
+
+.consistency-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.consistency-icon {
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  margin-bottom: 0.25rem;
+}
+
+.consistency-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+  font-weight: 600;
+  color: var(--white);
+}
+
+.consistency-desc {
+  font-size: var(--small-size);
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* --- SLIDE 9: Preset Demo --- */
+.preset-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.4rem, 1vw, 0.75rem);
+  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
+.preset-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: clamp(0.5rem, 1.2vw, 0.875rem);
+}
+
+.preset-dot {
+  width: clamp(8px, 1vw, 12px);
+  height: clamp(8px, 1vw, 12px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.preset-name {
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  font-weight: 600;
+  color: var(--white);
+}
+
+.preset-use {
+  font-size: var(--small-size);
+  color: var(--muted);
+}
+
+/* --- SLIDE 10: Recommended Workflow --- */
+.workflow-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin-top: clamp(0.75rem, 2vw, 1.5rem);
+  flex-wrap: wrap;
+}
+
+.wf-box {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.wf-icon { font-size: clamp(1.1rem, 2vw, 1.75rem); margin-bottom: 0.4rem; }
+.wf-title {
+  font-size: clamp(0.75rem, 1.3vw, 1rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.25rem;
+}
+.wf-desc { font-size: var(--small-size); color: var(--muted); line-height: 1.4; }
+
+.wf-arrow {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: var(--cyan);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* --- SLIDE 11: Benefits --- */
+.benefit-cols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.benefit-icon { font-size: clamp(1rem, 1.8vw, 1.4rem); flex-shrink: 0; margin-top: 0.1em; }
+.benefit-title { font-size: clamp(0.8rem, 1.3vw, 1rem); font-weight: 700; color: var(--white); margin-bottom: 0.25rem; }
+.benefit-desc { font-size: var(--small-size); color: var(--muted); line-height: 1.5; }
+
+/* --- SLIDE 12: CTA --- */
+#slide-12 {
+  background: var(--bg);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#slide-12 .cta-glow {
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+#slide-12 .cta-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding: var(--slide-padding);
+}
+
+#slide-12 h2 {
+  font-size: clamp(2rem, 6vw, 5rem);
+  background: linear-gradient(135deg, var(--cyan), var(--magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.05;
+}
+
+#slide-12 .cta-sub {
+  font-size: clamp(0.85rem, 1.8vw, 1.25rem);
+  color: rgba(240,246,255,0.55);
+  max-width: 42ch;
+}
+
+#slide-12 .cta-command {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  color: var(--cyan);
+}
+
+/* section label top-right */
+.section-label {
+  position: absolute;
+  top: clamp(1rem, 2.5vw, 2.5rem);
+  right: clamp(1rem, 2.5vw, 2.5rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--small-size);
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* Horizontal rule accent */
+.hr-cyan {
+  height: 1px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+  margin: clamp(0.4rem, 1vw, 0.75rem) 0;
+  opacity: 0.4;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+<div class="slide-counter" id="slideCounter">01 / 12</div>
+<div class="keyboard-hint">← → ↑ ↓ · swipe</div>
+
+<main>
+
+  <!-- ===== SLIDE 1: TITLE ===== -->
+  <section class="slide" id="slide-1" data-slide="1">
+    <div class="grid-bg"></div>
+    <div class="scanline"></div>
+    <div class="glow-cyan" style="width:50vw;height:50vw;top:-15vw;right:-10vw;opacity:0.6;"></div>
+    <div class="glow-magenta" style="width:40vw;height:40vw;bottom:-10vw;left:-5vw;opacity:0.5;"></div>
+
+    <div class="slide-content">
+      <div class="title-eyebrow reveal">
+        <div class="eyebrow-line"></div>
+        <span class="mono muted" style="letter-spacing:0.15em;text-transform:uppercase;font-size:var(--small-size);">Claude Code · Frontend Slides Skill</span>
+      </div>
+
+      <h1 class="reveal reveal-delay-1">
+        Presentaciones<br>
+        <span class="gradient-text">que se crean<br>solas.</span>
+      </h1>
+
+      <p class="subtitle reveal reveal-delay-2">
+        Deja de hacerlas a mano. Dale contexto a Claude Code y recibe un informe consistente, bello y listo para presentar — cada vez.
+      </p>
+
+      <div class="bottom-stat reveal reveal-delay-3">
+        <div class="stat-item">
+          <span class="stat-num">0</span>
+          <span class="stat-label">dependencias</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num accent-magenta">1</span>
+          <span class="stat-label">comando</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">consistencia</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 2: EL PROBLEMA ===== -->
+  <section class="slide" id="slide-2" data-slide="2">
+    <div class="grid-bg"></div>
+    <span class="section-label">01 · Problema</span>
+
+    <div class="slide-content">
+      <div class="tag tag-magenta reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">El estado actual</div>
+      <h2 class="reveal reveal-delay-1">Crear informes es<br><span class="accent-magenta">trabajo manual costoso.</span></h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <div class="pain-grid reveal reveal-delay-2">
+        <div class="pain-item">
+          <div class="pain-icon">⏱</div>
+          <div>
+            <div class="pain-title">Tiempo perdido</div>
+            <div class="pain-desc">Horas copiando datos a slides, ajustando formato, alineando colores.</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-icon">🎨</div>
+          <div>
+            <div class="pain-title">Inconsistencia visual</div>
+            <div class="pain-desc">Cada persona hace la presentación a su manera. No hay un estándar.</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-icon">🔁</div>
+          <div>
+            <div class="pain-title">Reproceso constante</div>
+            <div class="pain-desc">Pequeños cambios de datos obligan a rehacer slides manualmente.</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-icon">📂</div>
+          <div>
+            <div class="pain-title">Contexto disperso</div>
+            <div class="pain-desc">La información vive en correos, Excels y chats — nunca centralizada.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 3: LA SOLUCIÓN ===== -->
+  <section class="slide" id="slide-3" data-slide="3">
+    <div class="grid-bg"></div>
+    <div class="glow-cyan" style="width:45vw;height:45vw;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.5;"></div>
+    <span class="section-label">02 · Solución</span>
+
+    <div class="slide-content" style="position:relative;z-index:2;">
+      <div class="tag tag-cyan reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">La nueva forma</div>
+      <h2 class="reveal reveal-delay-1">Contexto en archivos<br><span class="accent-cyan">+ un comando =</span><br>presentación lista.</h2>
+
+      <div class="hero-command reveal reveal-delay-2">
+        <span class="prompt-symbol">$ </span>
+        <span class="cmd-text">/frontend-slides</span>
+        <span style="color:rgba(240,246,255,0.5);font-family:'JetBrains Mono',monospace;font-size:clamp(0.7rem,1.3vw,1rem);"> Genera el informe mensual de cartera usando los archivos en /contexto</span>
+      </div>
+
+      <p class="reveal reveal-delay-3" style="color:var(--muted);font-size:var(--body-size);">
+        Claude Code lee los archivos de contexto, entiende los datos y genera una presentación HTML completa, animada y con formato consistente — lista para abrir en el navegador.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 4: CÓMO FUNCIONA LA SKILL ===== -->
+  <section class="slide" id="slide-4" data-slide="4">
+    <div class="grid-bg"></div>
+    <span class="section-label">03 · Cómo funciona</span>
+
+    <div class="slide-content">
+      <h2 class="reveal">La skill tiene <span class="accent-cyan">7 pasos</span> automáticos.</h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <div class="flow-steps reveal reveal-delay-2">
+        <div class="flow-step">
+          <span class="step-num">01</span>
+          <div class="step-content">
+            <div class="step-title">Detecta el modo</div>
+            <div class="step-desc">Nueva presentación, conversión PPT, o mejora de slides existentes.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <span class="step-num">02</span>
+          <div class="step-content">
+            <div class="step-title">Lee el contexto</div>
+            <div class="step-desc">Analiza los archivos que le das: datos, notas, objetivos del informe.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <span class="step-num">03</span>
+          <div class="step-content">
+            <div class="step-title">Selecciona el estilo</div>
+            <div class="step-desc">12 presets visuales. Tú eliges el feeling, Claude aplica el diseño.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <span class="step-num">04</span>
+          <div class="step-content">
+            <div class="step-title">Construye y valida</div>
+            <div class="step-desc">Genera el HTML, verifica que todo encaje en pantalla, sin scroll interno.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 5: ARCHIVOS DE CONTEXTO ===== -->
+  <section class="slide" id="slide-5" data-slide="5">
+    <div class="grid-bg"></div>
+    <span class="section-label">04 · Archivos de contexto</span>
+
+    <div class="slide-content">
+      <h2 class="reveal">Estructura tu carpeta<br><span class="accent-cyan">de contexto así.</span></h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(0.5rem,2vw,1.5rem);margin-top:clamp(0.5rem,1.5vw,1rem);">
+        <div class="card reveal reveal-delay-2">
+          <div class="file-tree">
+            <div><span class="dir">📁 informe-cartera/</span></div>
+            <div>&nbsp;&nbsp;<span class="dir">📁 contexto/</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-file">📄 resumen.md</span> <span class="comment-ft">← descripción del informe</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-file">📊 datos.csv</span> <span class="comment-ft">← métricas clave</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 hallazgos.md</span> <span class="comment-ft">← insights del equipo</span></div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 audiencia.md</span> <span class="comment-ft">← para quién es</span></div>
+            <div>&nbsp;&nbsp;<span class="dir">📁 assets/</span> <span class="comment-ft">← imágenes opcionales</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:clamp(0.4rem,1vw,0.75rem);" class="reveal reveal-delay-3">
+          <div class="card">
+            <div class="step-title" style="color:var(--cyan);margin-bottom:0.3rem;">resumen.md</div>
+            <div class="step-desc">Propósito del informe, período, decisiones que se tomarán con él.</div>
+          </div>
+          <div class="card">
+            <div class="step-title" style="color:var(--cyan);margin-bottom:0.3rem;">datos.csv / .xlsx</div>
+            <div class="step-desc">Cifras concretas. Claude las lee, las interpreta y las convierte en slides.</div>
+          </div>
+          <div class="card">
+            <div class="step-title" style="color:var(--cyan);margin-bottom:0.3rem;">hallazgos.md</div>
+            <div class="step-desc">Lo que el equipo ya analizó. Claude lo presenta con jerarquía visual.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 6: EL COMANDO ===== -->
+  <section class="slide" id="slide-6" data-slide="6">
+    <div class="grid-bg"></div>
+    <div class="glow-magenta" style="width:40vw;height:40vw;bottom:-5vw;right:-5vw;opacity:0.5;"></div>
+    <span class="section-label">05 · El comando</span>
+
+    <div class="slide-content" style="position:relative;z-index:2;">
+      <div class="tag tag-magenta reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">Paso a paso</div>
+      <h2 class="reveal reveal-delay-1">Así se invoca la skill<br>desde Claude Code.</h2>
+
+      <div class="big-command reveal reveal-delay-2">
+        <div><span style="color:var(--muted);"># Opción 1: descripción libre</span></div>
+        <div><span style="color:var(--magenta);">$</span> <span style="color:var(--cyan);">/frontend-slides</span> Genera informe cartera usando contexto/</div>
+        <br>
+        <div><span style="color:var(--muted);"># Opción 2: especificar el preset visual</span></div>
+        <div><span style="color:var(--magenta);">$</span> <span style="color:var(--cyan);">/frontend-slides</span> Informe mensual, preset "Notebook Tabs", tone corporativo</div>
+        <br>
+        <div><span style="color:var(--muted);"># Opción 3: convertir PPT existente</span></div>
+        <div><span style="color:var(--magenta);">$</span> <span style="color:var(--cyan);">/frontend-slides</span> Convierte informe-julio.pptx y mejora el diseño</div>
+      </div>
+
+      <p class="reveal reveal-delay-3" style="font-size:var(--small-size);color:var(--muted);">
+        Claude Code lee los archivos, pregunta solo lo mínimo necesario y genera el HTML completo con navegación por teclado, animaciones y responsive.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 7: EL RESULTADO ===== -->
+  <section class="slide" id="slide-7" data-slide="7">
+    <div class="grid-bg"></div>
+    <span class="section-label">06 · Resultado</span>
+
+    <div class="slide-content">
+      <h2 class="reveal">Un archivo HTML.<br><span class="accent-cyan">Cero dependencias.</span><br>Todo adentro.</h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <ul class="result-list reveal reveal-delay-2">
+        <li><span class="bullet">▹</span><div><strong>Navegación completa</strong> — teclado (←→), rueda del mouse, swipe en móvil, barra de progreso.</div></li>
+        <li><span class="bullet">▹</span><div><strong>Animaciones en entrada</strong> — cada elemento aparece con timing calculado, sin ser ruidoso.</div></li>
+        <li><span class="bullet">▹</span><div><strong>100% responsive</strong> — se ve igual en 4K, laptop, tablet y celular.</div></li>
+        <li><span class="bullet">▹</span><div><strong>Reducción de movimiento</strong> — respeta <span class="mono accent-cyan">prefers-reduced-motion</span> automáticamente.</div></li>
+        <li><span class="bullet">▹</span><div><strong>Abre directo en el browser</strong> — doble clic al archivo. Sin instalar nada, sin servidor.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 8: CONSISTENCIA ===== -->
+  <section class="slide" id="slide-8" data-slide="8">
+    <div class="grid-bg"></div>
+    <span class="section-label">07 · Consistencia</span>
+
+    <div class="slide-content">
+      <div class="tag tag-cyan reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">El verdadero valor</div>
+      <h2 class="reveal reveal-delay-1">Mismo formato.<br><span class="accent-cyan">Cada informe.</span><br>Sin esfuerzo extra.</h2>
+
+      <div class="consistency-grid reveal reveal-delay-2">
+        <div class="consistency-card">
+          <div class="consistency-icon">🎨</div>
+          <div class="consistency-title">Identidad visual</div>
+          <div class="consistency-desc">Un preset = mismo look en todos los informes del equipo.</div>
+        </div>
+        <div class="consistency-card">
+          <div class="consistency-icon">📐</div>
+          <div class="consistency-title">Estructura fija</div>
+          <div class="consistency-desc">Siempre: título → problema → datos → hallazgos → CTA.</div>
+        </div>
+        <div class="consistency-card">
+          <div class="consistency-icon">⚡</div>
+          <div class="consistency-title">Velocidad</div>
+          <div class="consistency-desc">De contexto a presentación en minutos, no en horas.</div>
+        </div>
+      </div>
+
+      <div class="card card-glow reveal reveal-delay-3" style="margin-top:clamp(0.5rem,1.5vw,1rem);text-align:center;">
+        <p style="font-size:var(--body-size);color:var(--white);">
+          El equipo ya no decide cómo se ve el informe — <strong style="color:var(--cyan);">el sistema lo decide.</strong> Todos se enfocan en el contenido.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 9: LOS 12 PRESETS ===== -->
+  <section class="slide" id="slide-9" data-slide="9">
+    <div class="grid-bg"></div>
+    <span class="section-label">08 · Estilos</span>
+
+    <div class="slide-content">
+      <h2 class="reveal">12 presets visuales.<br><span class="accent-cyan">Elige el feeling.</span></h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <div class="preset-list reveal reveal-delay-2">
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#ff6b00;"></div>
+          <div><div class="preset-name">Bold Signal</div><div class="preset-use">Pitches, lanzamientos, impacto</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#4f6ef7;"></div>
+          <div><div class="preset-name">Electric Studio</div><div class="preset-use">Revisiones estratégicas, clientes</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#d4b483;"></div>
+          <div><div class="preset-name">Notebook Tabs</div><div class="preset-use">Reportes, revisiones estructuradas</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#00d4ff;"></div>
+          <div><div class="preset-name">Neon Cyber</div><div class="preset-use">Herramientas tech, IA, futuro</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#c8e6c9;"></div>
+          <div><div class="preset-name">Swiss Modern</div><div class="preset-use">Corporativo, datos, estrategia</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#9c7c5c;"></div>
+          <div><div class="preset-name">Dark Botanical</div><div class="preset-use">Premium, narrativas cuidadas</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#e91e8c;"></div>
+          <div><div class="preset-name">Creative Voltage</div><div class="preset-use">Marca, producto, storytelling</div></div>
+        </div>
+        <div class="preset-item">
+          <div class="preset-dot" style="background:#f4a261;"></div>
+          <div><div class="preset-name">Vintage Editorial</div><div class="preset-use">Charlas, narrativas opinionadas</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 10: FLUJO RECOMENDADO ===== -->
+  <section class="slide" id="slide-10" data-slide="10">
+    <div class="grid-bg"></div>
+    <span class="section-label">09 · Flujo de trabajo</span>
+
+    <div class="slide-content">
+      <h2 class="reveal">El flujo completo<br><span class="accent-cyan">para tu equipo.</span></h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <div class="workflow-row reveal reveal-delay-2">
+        <div class="wf-box">
+          <div class="wf-icon">📁</div>
+          <div class="wf-title">1. Prepara</div>
+          <div class="wf-desc">Centraliza datos, hallazgos y objetivos en archivos .md / .csv</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-box">
+          <div class="wf-icon">⌨️</div>
+          <div class="wf-title">2. Invoca</div>
+          <div class="wf-desc"><span class="mono accent-cyan">/frontend-slides</span><br>+ descripción del informe</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-box">
+          <div class="wf-icon">🎨</div>
+          <div class="wf-title">3. Elige estilo</div>
+          <div class="wf-desc">Claude genera 3 previews visuales o aplica el preset del equipo</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-box" style="border-color:rgba(0,212,255,0.4);box-shadow:0 0 20px rgba(0,212,255,0.1);">
+          <div class="wf-icon">✅</div>
+          <div class="wf-title">4. Listo</div>
+          <div class="wf-desc">HTML completo, abre en navegador, comparte o exporta</div>
+        </div>
+      </div>
+
+      <div class="card reveal reveal-delay-3" style="margin-top:clamp(0.5rem,1.5vw,1rem);">
+        <p style="font-size:var(--small-size);color:var(--muted);">
+          <strong style="color:var(--white);">Tip para el equipo:</strong> guarda un preset fijo en las instrucciones del proyecto (<span class="mono accent-cyan">CLAUDE.md</span>) para que todos los informes salgan con el mismo look sin tener que pedirlo cada vez.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 11: BENEFICIOS ===== -->
+  <section class="slide" id="slide-11" data-slide="11">
+    <div class="grid-bg"></div>
+    <span class="section-label">10 · Beneficios</span>
+
+    <div class="slide-content">
+      <h2 class="reveal">Lo que gana el equipo<br><span class="accent-cyan">desde el primer informe.</span></h2>
+      <div class="hr-cyan reveal reveal-delay-1"></div>
+
+      <div class="benefit-cols reveal reveal-delay-2">
+        <div class="benefit-item">
+          <div class="benefit-icon">🕐</div>
+          <div>
+            <div class="benefit-title">Horas devueltas al equipo</div>
+            <div class="benefit-desc">De 3-4h de armado manual a ~15 minutos de preparar contexto.</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">🏆</div>
+          <div>
+            <div class="benefit-title">Calidad profesional siempre</div>
+            <div class="benefit-desc">Tipografía, animaciones y layout que harían envidiar a un diseñador.</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">🔄</div>
+          <div>
+            <div class="benefit-title">Actualizaciones instantáneas</div>
+            <div class="benefit-desc">Cambió un dato → actualiza el archivo → regenera → listo.</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">📐</div>
+          <div>
+            <div class="benefit-title">Estándar del equipo</div>
+            <div class="benefit-desc">Todos los informes lucen iguales. Una sola identidad visual.</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">🌐</div>
+          <div>
+            <div class="benefit-title">Sin herramientas externas</div>
+            <div class="benefit-desc">Sin PowerPoint, sin Canva, sin Figma. Un HTML que abre en cualquier browser.</div>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">🧠</div>
+          <div>
+            <div class="benefit-title">Foco en el análisis</div>
+            <div class="benefit-desc">El equipo piensa en los datos, no en cómo se verán las slides.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 12: CTA ===== -->
+  <section class="slide" id="slide-12" data-slide="12">
+    <div class="grid-bg"></div>
+    <div class="cta-glow"></div>
+
+    <div class="cta-content">
+      <div class="tag tag-cyan reveal" style="margin-bottom:0.5rem;">Empieza hoy</div>
+      <h2 class="reveal reveal-delay-1">Tu próximo<br>informe,<br>así.</h2>
+      <p class="cta-sub reveal reveal-delay-2">
+        Prepara un archivo <span class="mono" style="color:var(--cyan);">contexto.md</span> con el resumen de tu informe y escribe:
+      </p>
+      <div class="cta-command reveal reveal-delay-3">
+        <span style="color:var(--magenta);">$ </span>/frontend-slides &nbsp;[describe tu informe]
+      </div>
+      <p class="reveal reveal-delay-4" style="font-size:var(--small-size);color:var(--muted);max-width:42ch;text-align:center;">
+        Guarda el preset preferido del equipo en <span class="mono accent-cyan">CLAUDE.md</span> para que sea el formato oficial de todos los informes.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ============================================
+// PRESENTATION CONTROLLER
+// ============================================
+class PresentationController {
+  constructor() {
+    this.slides = Array.from(document.querySelectorAll('.slide'));
+    this.total = this.slides.length;
+    this.current = 0;
+    this.isScrolling = false;
+    this.progressBar = document.getElementById('progressBar');
+    this.slideCounter = document.getElementById('slideCounter');
+
+    this.setupRevealObserver();
+    this.setupNavigation();
+    this.updateUI();
+
+    // Trigger first slide reveals
+    setTimeout(() => this.revealSlide(0), 100);
+  }
+
+  setupRevealObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const slideIndex = this.slides.indexOf(entry.target);
+          if (slideIndex !== -1) {
+            this.current = slideIndex;
+            this.updateUI();
+            this.revealSlide(slideIndex);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    this.slides.forEach(slide => observer.observe(slide));
+  }
+
+  revealSlide(index) {
+    const slide = this.slides[index];
+    if (!slide) return;
+    const reveals = slide.querySelectorAll('.reveal');
+    reveals.forEach(el => el.classList.add('visible'));
+  }
+
+  updateUI() {
+    const progress = ((this.current + 1) / this.total) * 100;
+    this.progressBar.style.width = progress + '%';
+    const n = String(this.current + 1).padStart(2, '0');
+    const t = String(this.total).padStart(2, '0');
+    this.slideCounter.textContent = `${n} / ${t}`;
+  }
+
+  goTo(index) {
+    if (index < 0 || index >= this.total) return;
+    this.slides[index].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  next() { this.goTo(this.current + 1); }
+  prev() { this.goTo(this.current - 1); }
+
+  setupNavigation() {
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowDown':
+        case 'ArrowRight':
+        case ' ':
+          e.preventDefault();
+          this.next();
+          break;
+        case 'ArrowUp':
+        case 'ArrowLeft':
+          e.preventDefault();
+          this.prev();
+          break;
+        case 'Home': e.preventDefault(); this.goTo(0); break;
+        case 'End': e.preventDefault(); this.goTo(this.total - 1); break;
+      }
+    });
+
+    // Wheel
+    let wheelCooldown = false;
+    window.addEventListener('wheel', (e) => {
+      if (wheelCooldown) return;
+      wheelCooldown = true;
+      if (e.deltaY > 0) this.next();
+      else this.prev();
+      setTimeout(() => { wheelCooldown = false; }, 800);
+    }, { passive: true });
+
+    // Touch
+    let touchStartY = 0;
+    let touchStartX = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 40) {
+        if (dy > 0) this.next();
+        else this.prev();
+      }
+    }, { passive: true });
+  }
+}
+
+// Boot
+document.addEventListener('DOMContentLoaded', () => {
+  new PresentationController();
+});
+</script>
+</body>
+</html>
