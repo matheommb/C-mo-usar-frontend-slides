@@ -7,1325 +7,1304 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ===========================================
-   VIEWPORT FITTING: MANDATORY BASE STYLES
-   =========================================== */
+/* ==========================================
+   BASE RESET & VIEWPORT MANDATORY
+   ========================================== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  height: 100%;
-  overflow-x: hidden;
-}
-
-html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
 
 .slide {
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
+  width: 100vw; height: 100vh; height: 100dvh;
+  overflow: hidden; scroll-snap-align: start;
+  display: flex; flex-direction: column;
   position: relative;
 }
 
 .slide-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-height: 100%;
-  overflow: hidden;
-  padding: var(--slide-padding);
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; max-height: 100%; overflow: hidden;
+  padding: var(--pad);
 }
 
 :root {
-  --title-size: clamp(1.5rem, 5vw, 4rem);
-  --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
-  --h3-size: clamp(1rem, 2.5vw, 1.75rem);
-  --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
-  --small-size: clamp(0.65rem, 1vw, 0.875rem);
-  --slide-padding: clamp(1rem, 5vw, 5rem);
-  --content-gap: clamp(0.5rem, 2vw, 2rem);
-  --element-gap: clamp(0.25rem, 1vw, 1rem);
+  --title: clamp(1.5rem, 5vw, 4rem);
+  --h2: clamp(1.25rem, 3.5vw, 2.5rem);
+  --h3: clamp(1rem, 2.2vw, 1.6rem);
+  --body: clamp(0.75rem, 1.5vw, 1.05rem);
+  --small: clamp(0.65rem, 1vw, 0.85rem);
+  --pad: clamp(1rem, 5vw, 5rem);
+  --gap: clamp(0.5rem, 2vw, 2rem);
+  --egap: clamp(0.25rem, 1vw, 1rem);
 
-  /* Neon Cyber palette */
-  --bg: #030712;
-  --bg2: #0a0f1e;
-  --cyan: #00d4ff;
-  --magenta: #ff0080;
-  --white: #f0f6ff;
-  --muted: #6b7a9e;
-  --card-bg: rgba(0, 212, 255, 0.04);
-  --card-border: rgba(0, 212, 255, 0.15);
-  --grid-line: rgba(0, 212, 255, 0.06);
+  --bg:     #030712;
+  --bg2:    #080d1a;
+  --cyan:   #00d4ff;
+  --mag:    #ff0080;
+  --white:  #f0f6ff;
+  --muted:  #5a6a8a;
+  --card:   rgba(0,212,255,0.04);
+  --border: rgba(0,212,255,0.14);
+  --grid:   rgba(0,212,255,0.055);
 }
 
-body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: 'Satoshi', system-ui, sans-serif;
-}
+body { background: var(--bg); color: var(--white);
+  font-family: 'Satoshi', system-ui, sans-serif; }
 
 @media (max-height: 700px) {
-  :root {
-    --slide-padding: clamp(0.75rem, 3vw, 2rem);
-    --content-gap: clamp(0.4rem, 1.5vw, 1rem);
-    --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
-    --h2-size: clamp(1rem, 3vw, 1.75rem);
-  }
+  :root { --pad: clamp(0.75rem,3vw,2rem); --h2: clamp(1rem,3vw,1.75rem); --title: clamp(1.25rem,4.5vw,2.5rem); }
 }
-
 @media (max-height: 600px) {
-  :root {
-    --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
-    --content-gap: clamp(0.3rem, 1vw, 0.75rem);
-    --title-size: clamp(1.1rem, 4vw, 2rem);
-    --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
-  }
-  .nav-dots, .keyboard-hint, .decorative { display: none; }
+  :root { --pad: clamp(0.5rem,2.5vw,1.5rem); --title: clamp(1.1rem,4vw,2rem); --body: clamp(0.7rem,1.2vw,0.95rem); }
+  .nav-dots, .keyboard-hint { display: none; }
 }
-
-@media (max-height: 500px) {
-  :root {
-    --slide-padding: clamp(0.4rem, 2vw, 1rem);
-    --title-size: clamp(1rem, 3.5vw, 1.5rem);
-    --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
-    --body-size: clamp(0.65rem, 1vw, 0.85rem);
-  }
-}
-
-@media (max-width: 600px) {
-  :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
-  .grid-3 { grid-template-columns: 1fr !important; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.2s !important;
-  }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
   html { scroll-behavior: auto; }
 }
 
-/* ===========================================
-   GRID BACKGROUND
-   =========================================== */
+/* ==========================================
+   DECORATIVE ELEMENTS
+   ========================================== */
 .grid-bg {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: clamp(30px, 5vw, 60px) clamp(30px, 5vw, 60px);
-  pointer-events: none;
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: clamp(30px,5vw,60px) clamp(30px,5vw,60px);
 }
 
-/* ===========================================
-   GLOW EFFECTS
-   =========================================== */
-.glow-cyan {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%);
-  pointer-events: none;
+.glow {
+  position: absolute; border-radius: 50%; pointer-events: none;
 }
 
-.glow-magenta {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,0,128,0.14) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* ===========================================
+/* ==========================================
    TYPOGRAPHY
-   =========================================== */
-h1 {
-  font-family: 'Clash Display', sans-serif;
-  font-size: var(--title-size);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
+   ========================================== */
+h1 { font-family: 'Clash Display', sans-serif; font-size: var(--title);
+  font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; }
+h2 { font-family: 'Clash Display', sans-serif; font-size: var(--h2);
+  font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+h3 { font-family: 'Satoshi', sans-serif; font-size: var(--h3); font-weight: 700; }
+p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82); }
 
-h2 {
-  font-family: 'Clash Display', sans-serif;
-  font-size: var(--h2-size);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-}
+.mono { font-family: 'JetBrains Mono', monospace; }
+.cy  { color: var(--cyan); }
+.mg  { color: var(--mag); }
+.mu  { color: var(--muted); }
 
-h3 {
-  font-family: 'Satoshi', sans-serif;
-  font-size: var(--h3-size);
-  font-weight: 700;
-}
+.grad { background: linear-gradient(135deg, var(--cyan), var(--mag));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-p, li {
-  font-size: var(--body-size);
-  line-height: 1.6;
-  color: rgba(240, 246, 255, 0.85);
-}
-
-.mono {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.7rem, 1.3vw, 1rem);
-}
-
-.accent-cyan { color: var(--cyan); }
-.accent-magenta { color: var(--magenta); }
-.muted { color: var(--muted); }
-
-/* ===========================================
-   CARDS & CONTAINERS
-   =========================================== */
+/* ==========================================
+   CARDS
+   ========================================== */
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: clamp(8px, 1vw, 16px);
-  padding: clamp(0.75rem, 2vw, 1.5rem);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: clamp(8px,1vw,14px); padding: clamp(0.75rem,2vw,1.5rem);
   backdrop-filter: blur(8px);
 }
-
-.card-glow {
-  border-color: rgba(0,212,255,0.4);
-  box-shadow: 0 0 clamp(15px, 2vw, 30px) rgba(0,212,255,0.12),
-              inset 0 0 clamp(15px, 2vw, 30px) rgba(0,212,255,0.04);
-}
+.card-glow { border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 clamp(15px,2vw,30px) rgba(0,212,255,0.1); }
 
 .tag {
-  display: inline-block;
-  padding: 0.2em 0.7em;
-  border-radius: 100px;
-  font-size: var(--small-size);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  display: inline-block; padding: 0.2em 0.75em; border-radius: 100px;
+  font-size: var(--small); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.tag-cy { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.28); color: var(--cyan); }
+.tag-mg { background: rgba(255,0,128,0.1); border: 1px solid rgba(255,0,128,0.28); color: var(--mag); }
+
+.hr { height: 1px; background: linear-gradient(90deg, var(--cyan), transparent);
+  opacity: 0.35; margin: clamp(0.4rem,1vw,0.75rem) 0; }
+
+.section-label {
+  position: absolute; top: clamp(1rem,2.5vw,2.5rem); right: clamp(1rem,2.5vw,2.5rem);
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55;
 }
 
-.tag-cyan {
-  background: rgba(0,212,255,0.12);
-  border: 1px solid rgba(0,212,255,0.3);
-  color: var(--cyan);
-}
-
-.tag-magenta {
-  background: rgba(255,0,128,0.12);
-  border: 1px solid rgba(255,0,128,0.3);
-  color: var(--magenta);
-}
-
-/* ===========================================
-   CODE BLOCK
-   =========================================== */
-.code-block {
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(0,212,255,0.2);
-  border-radius: 8px;
-  padding: clamp(0.75rem, 2vw, 1.5rem);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
-  line-height: 1.7;
-  overflow: hidden;
-}
-
-.code-block .comment { color: #4a5568; }
-.code-block .keyword { color: var(--cyan); }
-.code-block .string { color: #a8ff78; }
-.code-block .prompt { color: var(--magenta); }
-
-/* ===========================================
-   PROGRESS & NAVIGATION
-   =========================================== */
+/* ==========================================
+   PROGRESS & COUNTER
+   ========================================== */
 .progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--cyan), var(--magenta));
-  transition: width 0.4s ease;
-  z-index: 100;
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--mag));
+  transition: width 0.4s ease; z-index: 200;
   box-shadow: 0 0 8px var(--cyan);
 }
-
 .slide-counter {
-  position: fixed;
-  bottom: clamp(1rem, 2vw, 2rem);
-  right: clamp(1rem, 2vw, 2rem);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: var(--small-size);
-  color: var(--muted);
-  z-index: 100;
-  letter-spacing: 0.1em;
+  position: fixed; bottom: clamp(1rem,2vw,2rem); right: clamp(1rem,2vw,2rem);
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  color: var(--muted); z-index: 200; letter-spacing: 0.1em;
 }
-
 .keyboard-hint {
-  position: fixed;
-  bottom: clamp(1rem, 2vw, 2rem);
-  left: clamp(1rem, 2vw, 2rem);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: var(--small-size);
-  color: var(--muted);
-  z-index: 100;
-  opacity: 0.6;
+  position: fixed; bottom: clamp(1rem,2vw,2rem); left: clamp(1rem,2vw,2rem);
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  color: var(--muted); z-index: 200; opacity: 0.5;
 }
 
-/* ===========================================
+/* ==========================================
    REVEAL ANIMATIONS
-   =========================================== */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
+   ========================================== */
+.r { opacity: 0; transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease; }
+.r.on { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+.d5 { transition-delay: 0.5s; } .d6 { transition-delay: 0.6s; }
 
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-.reveal-delay-5 { transition-delay: 0.5s; }
-.reveal-delay-6 { transition-delay: 0.6s; }
+/* ==========================================
+   SLIDE 1 — TÍTULO + CUBO 3D
+   ========================================== */
+#s1 { background: var(--bg); }
 
-/* Scan line animation */
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.blink { animation: blink 1.2s infinite; }
-.float { animation: float 4s ease-in-out infinite; }
-.pulse { animation: pulse-glow 2.5s ease-in-out infinite; }
-
-/* ===========================================
-   SLIDE-SPECIFIC STYLES
-   =========================================== */
-
-/* --- SLIDE 1: Title --- */
-#slide-1 {
-  background: var(--bg);
-  justify-content: center;
-  align-items: flex-start;
-}
-
-#slide-1 .scanline {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
+#s1 .scanline {
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  animation: scanline 4s linear infinite;
-  opacity: 0.3;
+  animation: scan 4s linear infinite; opacity: 0.25;
 }
+@keyframes scan { 0% { transform: translateY(-2px); } 100% { transform: translateY(100vh); } }
 
-#slide-1 .title-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+/* CSS 3D Cube */
+.scene {
+  width: clamp(100px,14vw,180px); height: clamp(100px,14vw,180px);
+  perspective: 600px; flex-shrink: 0;
 }
-
-#slide-1 .eyebrow-line {
-  width: clamp(20px, 3vw, 40px);
-  height: 1px;
-  background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan);
+.cube {
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  animation: rotateCube 14s linear infinite;
+  position: relative;
 }
-
-#slide-1 h1 {
-  max-width: 18ch;
-  margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+@keyframes rotateCube {
+  0%   { transform: rotateX(15deg) rotateY(0deg); }
+  100% { transform: rotateX(15deg) rotateY(360deg); }
 }
-
-#slide-1 h1 .gradient-text {
-  background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-#slide-1 .subtitle {
-  font-size: clamp(0.85rem, 1.8vw, 1.25rem);
-  color: rgba(240,246,255,0.6);
-  max-width: 42ch;
-  margin-bottom: clamp(1rem, 3vw, 2.5rem);
-}
-
-#slide-1 .bottom-stat {
-  display: flex;
-  gap: clamp(1rem, 3vw, 3rem);
-  margin-top: clamp(1rem, 2vw, 2rem);
-}
-
-#slide-1 .stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-#slide-1 .stat-num {
-  font-family: 'Clash Display', sans-serif;
-  font-size: clamp(1.25rem, 2.5vw, 2rem);
-  font-weight: 700;
-  color: var(--cyan);
-}
-
-#slide-1 .stat-label {
-  font-size: var(--small-size);
-  color: var(--muted);
-  text-transform: uppercase;
+.cube-face {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.04);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.5rem, 1.2vw, 0.85rem);
+  color: rgba(0,212,255,0.7);
   letter-spacing: 0.08em;
 }
 
-/* --- SLIDE 2: Problem --- */
-#slide-2 {
-  background: var(--bg2);
-}
+.cube .front  { transform: translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .back   { transform: rotateY(180deg) translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .left   { transform: rotateY(-90deg) translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .right  { transform: rotateY(90deg)  translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .top    { transform: rotateX(90deg)  translateZ(calc(clamp(50px,7vw,90px))); }
+.cube .bottom { transform: rotateX(-90deg) translateZ(calc(clamp(50px,7vw,90px))); }
 
-.pain-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  margin-top: clamp(0.75rem, 2vw, 1.5rem);
-}
-
-.pain-item {
-  background: rgba(255, 0, 128, 0.05);
-  border: 1px solid rgba(255, 0, 128, 0.15);
-  border-radius: 10px;
-  padding: clamp(0.75rem, 1.5vw, 1.25rem);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.pain-icon {
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  flex-shrink: 0;
-  margin-top: 0.1em;
-}
-
-.pain-title {
-  font-size: clamp(0.8rem, 1.3vw, 1rem);
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 0.25rem;
-}
-
-.pain-desc {
-  font-size: var(--small-size);
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-/* --- SLIDE 3: Solution Overview --- */
-#slide-3 .hero-command {
-  background: rgba(0,0,0,0.7);
-  border: 1px solid rgba(0,212,255,0.3);
-  border-radius: 12px;
-  padding: clamp(1rem, 2.5vw, 2rem);
-  margin: clamp(1rem, 2vw, 2rem) 0;
-  position: relative;
-  overflow: hidden;
-}
-
-#slide-3 .hero-command::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-}
-
-#slide-3 .hero-command .prompt-symbol {
-  color: var(--magenta);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.7rem, 1.3vw, 1rem);
-}
-
-#slide-3 .hero-command .cmd-text {
-  color: var(--cyan);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.7rem, 1.3vw, 1rem);
-}
-
-/* --- SLIDE 4: How the Skill Works --- */
-.flow-steps {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.5rem, 1.2vw, 1rem);
-  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
-}
-
-.flow-step {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.5rem);
-}
-
-.step-num {
-  font-family: 'Clash Display', sans-serif;
-  font-size: clamp(1.25rem, 2.5vw, 2rem);
-  font-weight: 700;
-  color: var(--cyan);
-  opacity: 0.4;
-  min-width: 2ch;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.step-content { flex: 1; }
-.step-title {
-  font-size: clamp(0.8rem, 1.4vw, 1.05rem);
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 0.2rem;
-}
-
-.step-desc {
-  font-size: var(--small-size);
-  color: var(--muted);
-}
-
-/* --- SLIDE 5: Context Files --- */
-.file-tree {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
-  line-height: 1.9;
-  color: rgba(240,246,255,0.85);
-}
-
-.file-tree .dir { color: var(--cyan); }
-.file-tree .file { color: rgba(240,246,255,0.7); }
-.file-tree .comment-ft { color: var(--muted); }
-.file-tree .highlight-file { color: #a8ff78; font-weight: 600; }
-
-/* --- SLIDE 6: The Command --- */
-#slide-6 .big-command {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.75rem, 1.8vw, 1.3rem);
-  line-height: 1.6;
-  color: var(--cyan);
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(0,212,255,0.25);
-  border-radius: 12px;
-  padding: clamp(1rem, 2.5vw, 2rem);
-  margin: clamp(0.75rem, 1.5vw, 1.5rem) 0;
-}
-
-/* --- SLIDE 7: The Result --- */
-.result-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.4rem, 1vw, 0.75rem);
-  margin-top: clamp(0.75rem, 1.5vw, 1.5rem);
-}
-
-.result-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  font-size: var(--body-size);
-  color: rgba(240,246,255,0.85);
-}
-
-.result-list .bullet {
-  color: var(--cyan);
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 0.05em;
-}
-
-/* --- SLIDE 8: Consistency --- */
-.consistency-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  margin-top: clamp(0.75rem, 1.5vw, 1.5rem);
-}
-
-@media (max-width: 700px) {
-  .consistency-grid { grid-template-columns: 1fr; }
-}
-
-.consistency-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: clamp(0.75rem, 2vw, 1.25rem);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.consistency-icon {
-  font-size: clamp(1.25rem, 2.5vw, 2rem);
-  margin-bottom: 0.25rem;
-}
-
-.consistency-title {
-  font-family: 'Clash Display', sans-serif;
-  font-size: clamp(0.85rem, 1.4vw, 1.1rem);
-  font-weight: 600;
-  color: var(--white);
-}
-
-.consistency-desc {
-  font-size: var(--small-size);
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-/* --- SLIDE 9: Preset Demo --- */
-.preset-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.4rem, 1vw, 0.75rem);
-  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
-}
-
-.preset-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: clamp(0.5rem, 1.2vw, 0.875rem);
-}
-
-.preset-dot {
-  width: clamp(8px, 1vw, 12px);
-  height: clamp(8px, 1vw, 12px);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.preset-name {
-  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
-  font-weight: 600;
-  color: var(--white);
-}
-
-.preset-use {
-  font-size: var(--small-size);
-  color: var(--muted);
-}
-
-/* --- SLIDE 10: Recommended Workflow --- */
-.workflow-row {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  margin-top: clamp(0.75rem, 2vw, 1.5rem);
+#s1 .hero-row {
+  display: flex; align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
   flex-wrap: wrap;
 }
 
-.wf-box {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);
-  flex: 1;
-  min-width: 0;
-  text-align: center;
+#s1 .eyebrow { display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: clamp(0.5rem,1.5vw,1.25rem); }
+#s1 .eyebrow-line { width: clamp(20px,3vw,40px); height: 1px;
+  background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+
+#s1 .stats { display: flex; gap: clamp(1rem,3vw,3rem); margin-top: clamp(0.75rem,2vw,1.75rem); }
+#s1 .stat-n { font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.25rem,2.5vw,2rem); font-weight: 700; color: var(--cyan); }
+#s1 .stat-l { font-size: var(--small); color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ==========================================
+   SLIDE 2 — PROBLEMA (flip cards)
+   ========================================== */
+#s2 { background: var(--bg2); }
+
+.flip-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: clamp(0.5rem,1.5vw,1rem); margin-top: clamp(0.6rem,1.5vw,1.25rem);
+}
+.flip-wrap { perspective: 800px; }
+.flip-card {
+  position: relative; width: 100%; padding-top: clamp(80px,12vh,130px);
+  transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.flip-card.flipped { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 10px; padding: clamp(0.6rem,1.5vw,1rem);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.flip-front {
+  background: rgba(255,0,128,0.05); border: 1px solid rgba(255,0,128,0.16);
+}
+.flip-back {
+  background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.25);
+  transform: rotateY(180deg);
+}
+.flip-title { font-size: clamp(0.8rem,1.3vw,1rem); font-weight: 700; margin-bottom: 0.3rem; }
+.flip-desc  { font-size: var(--small); color: var(--muted); line-height: 1.5; }
+.flip-hint  { font-size: var(--small); color: var(--muted); opacity: 0.55;
+  margin-top: clamp(0.5rem,1vw,0.75rem); font-family: 'JetBrains Mono', monospace; }
+
+/* ==========================================
+   SLIDE 3 — SOLUCIÓN
+   ========================================== */
+#s3 .cmd-box {
+  background: rgba(0,0,0,0.65); border: 1px solid rgba(0,212,255,0.28);
+  border-radius: 12px; padding: clamp(0.75rem,2vw,1.75rem);
+  margin: clamp(0.6rem,1.5vw,1.25rem) 0; position: relative; overflow: hidden;
+}
+#s3 .cmd-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+#s3 .cmd-line { font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.65rem,1.25vw,0.95rem); line-height: 1.8; }
+.c-prompt { color: var(--mag); }
+.c-cmd    { color: var(--cyan); }
+.c-arg    { color: rgba(240,246,255,0.55); }
+.c-comm   { color: var(--muted); }
+.c-str    { color: #a8ff78; }
+
+/* ==========================================
+   SLIDE 4 — LOS 7 PASOS (interactive stepper)
+   ========================================== */
+#s4 { background: var(--bg2); }
+
+.stepper { display: flex; flex-direction: column;
+  gap: clamp(0.3rem,0.8vw,0.6rem); margin-top: clamp(0.5rem,1.2vw,1rem); }
+
+.step {
+  display: flex; align-items: stretch; gap: 0;
+  cursor: pointer; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border); transition: border-color 0.3s;
+}
+.step.active { border-color: rgba(0,212,255,0.5); }
+.step.active .step-bar { background: var(--cyan); }
+
+.step-bar {
+  width: 3px; flex-shrink: 0;
+  background: rgba(0,212,255,0.15);
+  transition: background 0.3s;
+}
+.step-inner {
+  flex: 1; display: flex; align-items: center;
+  gap: clamp(0.5rem,1.5vw,1rem); padding: clamp(0.4rem,1vw,0.7rem) clamp(0.6rem,1.5vw,1.1rem);
+  background: var(--card); transition: background 0.3s;
+}
+.step.active .step-inner { background: rgba(0,212,255,0.07); }
+
+.step-num {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1rem,2vw,1.5rem); font-weight: 700;
+  color: var(--cyan); opacity: 0.3; flex-shrink: 0; min-width: 1.8ch;
+  transition: opacity 0.3s;
+}
+.step.active .step-num { opacity: 1; }
+
+.step-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
+.step-desc { font-size: var(--small); color: var(--muted); line-height: 1.45; }
+
+.step-detail {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease; font-size: var(--small); color: var(--muted);
+  padding: 0 clamp(0.6rem,1.5vw,1.1rem) 0 calc(clamp(0.6rem,1.5vw,1.1rem) + clamp(1rem,2vw,1.5rem) + clamp(0.5rem,1.5vw,1rem) + 3px);
+}
+.step-detail.open { max-height: 80px; padding-bottom: clamp(0.4rem,0.8vw,0.6rem); }
+.step-detail p { font-size: var(--small); color: rgba(0,212,255,0.75); line-height: 1.5; }
+
+/* ==========================================
+   SLIDE 5 — CONTEXTO (file tree + particles canvas)
+   ========================================== */
+#s5 .two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(0.5rem,2vw,1.5rem); margin-top: clamp(0.5rem,1.2vw,1rem);
+}
+@media (max-width: 680px) { #s5 .two-col { grid-template-columns: 1fr; } }
+
+.file-tree { font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.62rem,1.1vw,0.85rem); line-height: 2; }
+.ft-dir  { color: var(--cyan); }
+.ft-file { color: rgba(240,246,255,0.65); }
+.ft-hi   { color: #a8ff78; font-weight: 600; }
+.ft-cm   { color: var(--muted); font-size: 0.85em; }
+
+.file-desc { display: flex; flex-direction: column; gap: clamp(0.35rem,0.8vw,0.6rem); }
+.fd-item { padding: clamp(0.5rem,1.2vw,0.875rem); background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; }
+.fd-title { font-size: clamp(0.72rem,1.15vw,0.9rem); font-weight: 700;
+  color: var(--cyan); margin-bottom: 0.2rem; font-family: 'JetBrains Mono', monospace; }
+.fd-desc  { font-size: var(--small); color: var(--muted); line-height: 1.45; }
+
+/* ==========================================
+   SLIDE 6 — EL COMANDO
+   ========================================== */
+#s6 .tab-nav {
+  display: flex; gap: 0; margin-top: clamp(0.6rem,1.5vw,1.25rem);
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 0.4em 1em; font-family: 'JetBrains Mono', monospace;
+  font-size: var(--small); color: var(--muted); background: none; border: none;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s; letter-spacing: 0.05em;
+}
+.tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+.tab-pane { display: none; margin-top: clamp(0.5rem,1.2vw,1rem); }
+.tab-pane.active { display: block; }
+
+.code-blk {
+  background: rgba(0,0,0,0.65); border: 1px solid rgba(0,212,255,0.22);
+  border-radius: 10px; padding: clamp(0.75rem,2vw,1.5rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.62rem,1.15vw,0.9rem); line-height: 1.8;
+  position: relative; overflow: hidden;
+}
+.copy-btn {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25);
+  color: var(--cyan); border-radius: 6px; padding: 0.2em 0.7em;
+  cursor: pointer; transition: background 0.2s, transform 0.1s;
+}
+.copy-btn:hover { background: rgba(0,212,255,0.2); }
+.copy-btn:active { transform: scale(0.95); }
+.copy-btn.copied { color: #a8ff78; border-color: #a8ff78; background: rgba(168,255,120,0.1); }
+
+/* ==========================================
+   SLIDE 7 — RESULTADO
+   ========================================== */
+.result-list { list-style: none; display: flex; flex-direction: column;
+  gap: clamp(0.4rem,1vw,0.75rem); margin-top: clamp(0.6rem,1.5vw,1.25rem); }
+.result-list li { display: flex; align-items: flex-start; gap: 0.75rem; }
+.rl-bullet { color: var(--cyan); font-weight: 700; flex-shrink: 0; margin-top: 0.05em; }
+
+/* ==========================================
+   SLIDE 8 — CONSISTENCIA (toggle switches)
+   ========================================== */
+#s8 { background: var(--bg2); }
+
+.toggle-demo {
+  display: flex; flex-direction: column; gap: clamp(0.5rem,1.2vw,1rem);
+  margin-top: clamp(0.6rem,1.5vw,1.25rem);
+}
+.toggle-row {
+  display: flex; align-items: center; gap: clamp(0.75rem,2vw,1.5rem);
+  padding: clamp(0.5rem,1.2vw,0.875rem) clamp(0.75rem,2vw,1.25rem);
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  transition: border-color 0.3s;
+}
+.toggle-row.active { border-color: rgba(0,212,255,0.4); }
+
+.toggle-switch {
+  position: relative; width: clamp(36px,4vw,52px); height: clamp(20px,2.2vw,28px);
+  flex-shrink: 0; cursor: pointer;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0; background: rgba(255,255,255,0.1);
+  border-radius: 100px; border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s;
+}
+.toggle-track::after {
+  content: ''; position: absolute; top: 50%; left: 3px;
+  transform: translateY(-50%);
+  width: clamp(12px,1.5vw,20px); height: clamp(12px,1.5vw,20px);
+  background: var(--muted); border-radius: 50%; transition: transform 0.3s, background 0.3s;
+}
+.toggle-switch input:checked + .toggle-track { background: rgba(0,212,255,0.2); border-color: var(--cyan); }
+.toggle-switch input:checked + .toggle-track::after {
+  transform: translateY(-50%) translateX(clamp(14px,1.8vw,24px));
+  background: var(--cyan); box-shadow: 0 0 8px rgba(0,212,255,0.6);
 }
 
-.wf-icon { font-size: clamp(1.1rem, 2vw, 1.75rem); margin-bottom: 0.4rem; }
-.wf-title {
-  font-size: clamp(0.75rem, 1.3vw, 1rem);
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 0.25rem;
+.toggle-label { flex: 1; }
+.tl-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
+.tl-off   { font-size: var(--small); color: var(--muted); }
+.tl-on    { font-size: var(--small); color: var(--cyan); display: none; }
+.toggle-row.active .tl-off { display: none; }
+.toggle-row.active .tl-on  { display: block; }
+
+/* ==========================================
+   SLIDE 9 — 12 PRESETS (interactive picker)
+   ========================================== */
+#s9 { background: var(--bg); }
+
+.preset-picker {
+  display: flex; flex-direction: column; gap: clamp(0.5rem,1.2vw,1rem);
+  margin-top: clamp(0.5rem,1.2vw,1rem);
 }
-.wf-desc { font-size: var(--small-size); color: var(--muted); line-height: 1.4; }
+.preset-chips {
+  display: flex; flex-wrap: wrap; gap: clamp(0.3rem,0.7vw,0.6rem);
+}
+.p-chip {
+  padding: 0.3em 0.9em; border-radius: 100px;
+  font-size: var(--small); font-weight: 600; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card);
+  color: var(--muted); transition: all 0.2s; letter-spacing: 0.04em;
+  font-family: 'Satoshi', sans-serif;
+}
+.p-chip:hover { color: var(--white); border-color: rgba(0,212,255,0.3); }
+.p-chip.sel { background: rgba(0,212,255,0.12); border-color: var(--cyan); color: var(--cyan); }
 
-.wf-arrow {
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  color: var(--cyan);
-  opacity: 0.5;
-  flex-shrink: 0;
+.preset-preview {
+  border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+  height: clamp(100px,18vh,180px); display: flex; align-items: center; justify-content: center;
+  position: relative; transition: all 0.4s ease;
+}
+.preset-preview .pp-title {
+  font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2.5vw,1.8rem);
+  font-weight: 700; position: relative; z-index: 2; text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.preset-preview .pp-sub {
+  font-size: var(--small); position: absolute; bottom: 0.75rem; right: 1rem;
+  color: rgba(255,255,255,0.6); font-family: 'JetBrains Mono', monospace; z-index: 2;
 }
 
-/* --- SLIDE 11: Benefits --- */
-.benefit-cols {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+/* ==========================================
+   SLIDE 10 — FLUJO (animated pipeline)
+   ========================================== */
+#s10 { background: var(--bg2); }
+
+.pipeline {
+  display: flex; align-items: stretch;
+  gap: 0; margin-top: clamp(0.6rem,1.5vw,1.25rem); overflow: hidden;
+}
+.pl-step {
+  flex: 1; display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border);
+  padding: clamp(0.6rem,1.5vw,1.1rem); position: relative;
+  cursor: pointer; transition: background 0.3s, border-color 0.3s;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%);
+  margin-left: -8px;
+}
+.pl-step:first-child { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%); margin-left: 0; }
+.pl-step:last-child  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 16px 50%); }
+
+.pl-step.active { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.45); }
+.pl-step.done   { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.25); }
+
+.pl-num { font-family: 'Clash Display', sans-serif; font-size: clamp(1rem,2vw,1.5rem);
+  font-weight: 700; color: var(--cyan); opacity: 0.3; transition: opacity 0.3s; }
+.pl-step.active .pl-num, .pl-step.done .pl-num { opacity: 1; }
+.pl-title { font-size: clamp(0.62rem,1.1vw,0.85rem); font-weight: 700; color: var(--white);
+  margin-top: 0.25rem; }
+.pl-sub   { font-size: clamp(0.55rem,0.9vw,0.72rem); color: var(--muted); line-height: 1.4; margin-top: 0.15rem; }
+
+.pl-detail {
+  margin-top: clamp(0.5rem,1.2vw,1rem);
+  padding: clamp(0.6rem,1.5vw,1rem); background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.2); border-radius: 10px;
+  min-height: clamp(55px,8vh,80px);
+  font-size: var(--small); color: rgba(0,212,255,0.85); line-height: 1.55;
 }
 
-.benefit-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
+.pl-controls { display: flex; gap: 0.5rem; margin-top: clamp(0.5rem,1vw,0.75rem); }
+.pl-btn {
+  padding: 0.35em 1em; border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: var(--small);
+  cursor: pointer; transition: background 0.2s, transform 0.1s; border: none;
 }
+.pl-btn:active { transform: scale(0.96); }
+.pl-prev { background: rgba(255,255,255,0.07); color: var(--muted); }
+.pl-prev:hover { background: rgba(255,255,255,0.12); color: var(--white); }
+.pl-next { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid rgba(0,212,255,0.3); }
+.pl-next:hover { background: rgba(0,212,255,0.25); }
 
-.benefit-icon { font-size: clamp(1rem, 1.8vw, 1.4rem); flex-shrink: 0; margin-top: 0.1em; }
-.benefit-title { font-size: clamp(0.8rem, 1.3vw, 1rem); font-weight: 700; color: var(--white); margin-bottom: 0.25rem; }
-.benefit-desc { font-size: var(--small-size); color: var(--muted); line-height: 1.5; }
-
-/* --- SLIDE 12: CTA --- */
-#slide-12 {
-  background: var(--bg);
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+/* ==========================================
+   SLIDE 11 — BENEFICIOS
+   ========================================== */
+.ben-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: clamp(0.4rem,1.2vw,0.875rem); margin-top: clamp(0.6rem,1.5vw,1.25rem);
 }
+@media (max-width: 650px) { .ben-grid { grid-template-columns: 1fr; } }
 
-#slide-12 .cta-glow {
-  position: absolute;
-  width: 60vw;
-  height: 60vw;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 65%);
+.ben-card {
+  padding: clamp(0.6rem,1.5vw,1.1rem); background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px;
+  display: flex; flex-direction: column; gap: 0.35rem;
+  transition: border-color 0.25s, transform 0.25s;
+  cursor: default;
+}
+.ben-card:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-2px); }
+.ben-mark { width: clamp(6px,0.8vw,10px); height: clamp(6px,0.8vw,10px);
+  border-radius: 50%; background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan); margin-bottom: 0.15rem; flex-shrink: 0; }
+.ben-title { font-size: clamp(0.78rem,1.3vw,1rem); font-weight: 700; color: var(--white); }
+.ben-desc  { font-size: var(--small); color: var(--muted); line-height: 1.5; }
+
+/* ==========================================
+   SLIDE 12 — CTA
+   ========================================== */
+#s12 { background: var(--bg); align-items: center; justify-content: center; text-align: center; }
+
+.cta-glow {
+  position: absolute; width: 65vw; height: 65vw; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 65%);
   pointer-events: none;
 }
 
-#slide-12 .cta-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  padding: var(--slide-padding);
+#s12 .cta-inner {
+  position: relative; z-index: 2; display: flex; flex-direction: column;
+  align-items: center; gap: clamp(0.6rem,1.5vw,1.25rem); padding: var(--pad);
 }
 
-#slide-12 h2 {
-  font-size: clamp(2rem, 6vw, 5rem);
-  background: linear-gradient(135deg, var(--cyan), var(--magenta));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.05;
+#s12 h2 {
+  font-size: clamp(2rem,7vw,5.5rem);
+  line-height: 1; letter-spacing: -0.02em;
 }
 
-#slide-12 .cta-sub {
-  font-size: clamp(0.85rem, 1.8vw, 1.25rem);
-  color: rgba(240,246,255,0.55);
-  max-width: 42ch;
-}
+#s12 .cta-sub { font-size: clamp(0.8rem,1.6vw,1.1rem); color: rgba(240,246,255,0.5); max-width: 44ch; }
 
-#slide-12 .cta-command {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
-  background: rgba(0,212,255,0.08);
-  border: 1px solid rgba(0,212,255,0.25);
-  border-radius: 8px;
-  padding: 0.6em 1.2em;
-  color: var(--cyan);
+#s12 .cta-cmd {
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(0.75rem,1.4vw,1rem);
+  background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 8px; padding: 0.5em 1.3em; color: var(--cyan); cursor: pointer;
+  transition: background 0.2s, transform 0.1s; position: relative;
 }
-
-/* section label top-right */
-.section-label {
-  position: absolute;
-  top: clamp(1rem, 2.5vw, 2.5rem);
-  right: clamp(1rem, 2.5vw, 2.5rem);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: var(--small-size);
-  color: var(--muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.6;
+#s12 .cta-cmd:hover { background: rgba(0,212,255,0.15); }
+#s12 .cta-cmd:active { transform: scale(0.97); }
+#s12 .cta-cmd .copied-msg {
+  display: none; position: absolute; inset: 0; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7); border-radius: 8px;
+  font-size: var(--small); color: #a8ff78;
 }
+#s12 .cta-cmd.copied .copied-msg { display: flex; }
 
-/* Horizontal rule accent */
-.hr-cyan {
-  height: 1px;
-  background: linear-gradient(90deg, var(--cyan), transparent);
-  margin: clamp(0.4rem, 1vw, 0.75rem) 0;
-  opacity: 0.4;
+#s12 .claude-md-tip {
+  font-size: var(--small); color: var(--muted); max-width: 48ch; line-height: 1.6;
 }
 
 </style>
 </head>
 <body>
 
-<!-- Progress bar -->
 <div class="progress-bar" id="progressBar"></div>
 <div class="slide-counter" id="slideCounter">01 / 12</div>
-<div class="keyboard-hint">← → ↑ ↓ · swipe</div>
+<div class="keyboard-hint">&#8592; &#8594; &nbsp;·&nbsp; rueda &nbsp;·&nbsp; swipe</div>
 
 <main>
 
-  <!-- ===== SLIDE 1: TITLE ===== -->
-  <section class="slide" id="slide-1" data-slide="1">
-    <div class="grid-bg"></div>
-    <div class="scanline"></div>
-    <div class="glow-cyan" style="width:50vw;height:50vw;top:-15vw;right:-10vw;opacity:0.6;"></div>
-    <div class="glow-magenta" style="width:40vw;height:40vw;bottom:-10vw;left:-5vw;opacity:0.5;"></div>
+<!-- ====================================================
+     SLIDE 1: TÍTULO + CUBO 3D
+     ==================================================== -->
+<section class="slide" id="s1" data-slide="1">
+  <div class="grid-bg"></div>
+  <div class="scanline"></div>
+  <div class="glow" style="width:50vw;height:50vw;top:-15vw;right:-8vw;background:radial-gradient(circle,rgba(0,212,255,.15) 0%,transparent 65%);"></div>
+  <div class="glow" style="width:38vw;height:38vw;bottom:-8vw;left:-4vw;background:radial-gradient(circle,rgba(255,0,128,.12) 0%,transparent 65%);"></div>
 
-    <div class="slide-content">
-      <div class="title-eyebrow reveal">
-        <div class="eyebrow-line"></div>
-        <span class="mono muted" style="letter-spacing:0.15em;text-transform:uppercase;font-size:var(--small-size);">Claude Code · Frontend Slides Skill</span>
-      </div>
-
-      <h1 class="reveal reveal-delay-1">
-        Presentaciones<br>
-        <span class="gradient-text">que se crean<br>solas.</span>
-      </h1>
-
-      <p class="subtitle reveal reveal-delay-2">
-        Deja de hacerlas a mano. Dale contexto a Claude Code y recibe un informe consistente, bello y listo para presentar — cada vez.
-      </p>
-
-      <div class="bottom-stat reveal reveal-delay-3">
-        <div class="stat-item">
-          <span class="stat-num">0</span>
-          <span class="stat-label">dependencias</span>
+  <div class="slide-content">
+    <div class="hero-row">
+      <div style="flex:1;min-width:0;">
+        <div class="eyebrow r">
+          <div class="eyebrow-line"></div>
+          <span class="mono mu" style="letter-spacing:.15em;text-transform:uppercase;font-size:var(--small);">Claude Code &nbsp;·&nbsp; Frontend Slides</span>
         </div>
-        <div class="stat-item">
-          <span class="stat-num accent-magenta">1</span>
-          <span class="stat-label">comando</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">∞</span>
-          <span class="stat-label">consistencia</span>
+        <h1 class="r d1">
+          Presentaciones<br>
+          <span class="grad">que se crean<br>solas.</span>
+        </h1>
+        <p class="r d2" style="font-size:clamp(0.85rem,1.8vw,1.2rem);color:rgba(240,246,255,.55);max-width:40ch;margin-top:clamp(.5rem,1.5vw,1rem);">
+          Dale contexto a Claude Code y recibe un informe con formato consistente — sin tocar slides manualmente.
+        </p>
+        <div class="stats r d3">
+          <div><div class="stat-n">0</div><div class="stat-l">dependencias</div></div>
+          <div><div class="stat-n mg">1</div><div class="stat-l">comando</div></div>
+          <div><div class="stat-n">&infin;</div><div class="stat-l">consistencia</div></div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 2: EL PROBLEMA ===== -->
-  <section class="slide" id="slide-2" data-slide="2">
-    <div class="grid-bg"></div>
-    <span class="section-label">01 · Problema</span>
-
-    <div class="slide-content">
-      <div class="tag tag-magenta reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">El estado actual</div>
-      <h2 class="reveal reveal-delay-1">Crear informes es<br><span class="accent-magenta">trabajo manual costoso.</span></h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
-
-      <div class="pain-grid reveal reveal-delay-2">
-        <div class="pain-item">
-          <div class="pain-icon">⏱</div>
-          <div>
-            <div class="pain-title">Tiempo perdido</div>
-            <div class="pain-desc">Horas copiando datos a slides, ajustando formato, alineando colores.</div>
-          </div>
-        </div>
-        <div class="pain-item">
-          <div class="pain-icon">🎨</div>
-          <div>
-            <div class="pain-title">Inconsistencia visual</div>
-            <div class="pain-desc">Cada persona hace la presentación a su manera. No hay un estándar.</div>
-          </div>
-        </div>
-        <div class="pain-item">
-          <div class="pain-icon">🔁</div>
-          <div>
-            <div class="pain-title">Reproceso constante</div>
-            <div class="pain-desc">Pequeños cambios de datos obligan a rehacer slides manualmente.</div>
-          </div>
-        </div>
-        <div class="pain-item">
-          <div class="pain-icon">📂</div>
-          <div>
-            <div class="pain-title">Contexto disperso</div>
-            <div class="pain-desc">La información vive en correos, Excels y chats — nunca centralizada.</div>
-          </div>
+      <div class="scene r d3">
+        <div class="cube">
+          <div class="cube-face front">SLIDE</div>
+          <div class="cube-face back">HTML</div>
+          <div class="cube-face left">CSS</div>
+          <div class="cube-face right">JS</div>
+          <div class="cube-face top">/slide</div>
+          <div class="cube-face bottom">skill</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== SLIDE 3: LA SOLUCIÓN ===== -->
-  <section class="slide" id="slide-3" data-slide="3">
-    <div class="grid-bg"></div>
-    <div class="glow-cyan" style="width:45vw;height:45vw;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.5;"></div>
-    <span class="section-label">02 · Solución</span>
+<!-- ====================================================
+     SLIDE 2: PROBLEMA — flip cards interactivos
+     ==================================================== -->
+<section class="slide" id="s2" data-slide="2">
+  <div class="grid-bg"></div>
+  <span class="section-label">01 &middot; Problema</span>
 
-    <div class="slide-content" style="position:relative;z-index:2;">
-      <div class="tag tag-cyan reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">La nueva forma</div>
-      <h2 class="reveal reveal-delay-1">Contexto en archivos<br><span class="accent-cyan">+ un comando =</span><br>presentación lista.</h2>
-
-      <div class="hero-command reveal reveal-delay-2">
-        <span class="prompt-symbol">$ </span>
-        <span class="cmd-text">/frontend-slides</span>
-        <span style="color:rgba(240,246,255,0.5);font-family:'JetBrains Mono',monospace;font-size:clamp(0.7rem,1.3vw,1rem);"> Genera el informe mensual de cartera usando los archivos en /contexto</span>
+  <div class="slide-content">
+    <div class="tag tag-mg r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">Estado actual</div>
+    <h2 class="r d1">Crear informes es<br><span class="mg">trabajo manual costoso.</span></h2>
+    <p class="r d1 mu" style="font-size:var(--small);margin-top:.25rem;">Haz clic en cada tarjeta para ver la solución.</p>
+    <div class="flip-grid r d2">
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Tiempo perdido</div>
+            <div class="flip-desc">Horas copiando datos a slides, ajustando formatos, alineando colores a mano.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Generación automática</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Claude Lee los datos y construye el deck completo. El equipo solo prepara el contexto.</div>
+          </div>
+        </div>
       </div>
-
-      <p class="reveal reveal-delay-3" style="color:var(--muted);font-size:var(--body-size);">
-        Claude Code lee los archivos de contexto, entiende los datos y genera una presentación HTML completa, animada y con formato consistente — lista para abrir en el navegador.
-      </p>
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Inconsistencia visual</div>
+            <div class="flip-desc">Cada persona hace la presentación a su manera. No hay estándar de equipo.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Preset del equipo</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Un preset fijo en CLAUDE.md garantiza el mismo look en cada informe, siempre.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Reproceso constante</div>
+            <div class="flip-desc">Un dato cambia y hay que rehacer slides manualmente. Errores casi garantizados.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Regeneración en minutos</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Actualiza el archivo de datos y vuelve a ejecutar el comando. La presentación se rehace sola.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flip-wrap">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-front">
+            <div class="flip-title" style="color:rgba(255,0,128,.9);">Contexto disperso</div>
+            <div class="flip-desc">La información vive en correos, Excels y chats. Nunca centralizada ni estructurada.</div>
+            <div class="flip-hint">[ clic para ver solución ]</div>
+          </div>
+          <div class="flip-back">
+            <div class="flip-title cy">Carpeta de contexto</div>
+            <div class="flip-desc" style="color:rgba(240,246,255,.75);">Una carpeta <span class="mono cy">/contexto</span> con archivos .md y .csv es todo lo que Claude necesita.</div>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== SLIDE 4: CÓMO FUNCIONA LA SKILL ===== -->
-  <section class="slide" id="slide-4" data-slide="4">
-    <div class="grid-bg"></div>
-    <span class="section-label">03 · Cómo funciona</span>
+<!-- ====================================================
+     SLIDE 3: SOLUCIÓN
+     ==================================================== -->
+<section class="slide" id="s3" data-slide="3">
+  <div class="grid-bg"></div>
+  <div class="glow" style="width:45vw;height:45vw;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,.07) 0%,transparent 65%);"></div>
+  <span class="section-label">02 &middot; Solución</span>
 
-    <div class="slide-content">
-      <h2 class="reveal">La skill tiene <span class="accent-cyan">7 pasos</span> automáticos.</h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
+  <div class="slide-content" style="position:relative;z-index:2;">
+    <div class="tag tag-cy r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">La nueva forma</div>
+    <h2 class="r d1">Contexto en archivos<br><span class="cy">+ un comando =</span><br>presentación lista.</h2>
 
-      <div class="flow-steps reveal reveal-delay-2">
-        <div class="flow-step">
+    <div class="cmd-box r d2">
+      <div class="cmd-line"><span class="c-comm"># invoca la skill desde Claude Code</span></div>
+      <div class="cmd-line"><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span><span class="c-arg"> Genera el informe mensual de cartera usando los archivos en /contexto</span></div>
+    </div>
+
+    <p class="r d3" style="color:var(--muted);font-size:var(--body);">
+      Claude lee los archivos, interpreta los datos y genera un HTML completo con navegación, animaciones y formato consistente — listo para abrir en el browser.
+    </p>
+  </div>
+</section>
+
+<!-- ====================================================
+     SLIDE 4: LOS 7 PASOS — stepper interactivo
+     ==================================================== -->
+<section class="slide" id="s4" data-slide="4">
+  <div class="grid-bg"></div>
+  <span class="section-label">03 &middot; Los 7 pasos</span>
+
+  <div class="slide-content">
+    <h2 class="r">La skill ejecuta <span class="cy">7 pasos</span> automáticos.</h2>
+    <div class="hr r d1"></div>
+
+    <div class="stepper r d2" id="stepper">
+      <div class="step active" data-detail="Elige entre tres modos: nueva presentación desde cero, conversión de un archivo .pptx existente, o mejora de un HTML de slides ya generado.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
           <span class="step-num">01</span>
-          <div class="step-content">
-            <div class="step-title">Detecta el modo</div>
-            <div class="step-desc">Nueva presentación, conversión PPT, o mejora de slides existentes.</div>
-          </div>
+          <div><div class="step-title">Detectar el modo</div><div class="step-desc">Nueva presentación · Conversión PPT · Mejora de slides</div></div>
         </div>
-        <div class="flow-step">
+      </div>
+      <div class="step" data-detail="Pregunta solo lo mínimo: propósito del informe, extensión esperada (corto 5-10, medio 10-20, largo 20+) y el estado del contenido (notas, borradores o tema libre).">
+        <div class="step-bar"></div>
+        <div class="step-inner">
           <span class="step-num">02</span>
-          <div class="step-content">
-            <div class="step-title">Lee el contexto</div>
-            <div class="step-desc">Analiza los archivos que le das: datos, notas, objetivos del informe.</div>
-          </div>
+          <div><div class="step-title">Descubrir el contenido</div><div class="step-desc">Propósito · Extensión · Estado del contenido</div></div>
         </div>
-        <div class="flow-step">
+      </div>
+      <div class="step" data-detail="Si ya se conoce el preset, se aplica directo. Si no, genera 3 previews de un solo slide en .ecc-design/ para exploración visual. El usuario elige o mezcla.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
           <span class="step-num">03</span>
-          <div class="step-content">
-            <div class="step-title">Selecciona el estilo</div>
-            <div class="step-desc">12 presets visuales. Tú eliges el feeling, Claude aplica el diseño.</div>
-          </div>
+          <div><div class="step-title">Descubrir el estilo</div><div class="step-desc">3 previews visuales · Selección de preset · Mezcla de estilos</div></div>
         </div>
-        <div class="flow-step">
+      </div>
+      <div class="step" data-detail="Genera el HTML con estructura semántica, CSS custom properties, clase PresentationController con teclado/rueda/swipe, e IntersectionObserver para animaciones de entrada.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
           <span class="step-num">04</span>
-          <div class="step-content">
-            <div class="step-title">Construye y valida</div>
-            <div class="step-desc">Genera el HTML, verifica que todo encaje en pantalla, sin scroll interno.</div>
-          </div>
+          <div><div class="step-title">Construir la presentación</div><div class="step-desc">HTML semántico · CSS variables · JS de navegación · Animaciones</div></div>
+        </div>
+      </div>
+      <div class="step" data-detail="Regla de oro: cada slide = exactamente un viewport. Usa height:100dvh, overflow:hidden y clamp() para todo. Si el contenido no cabe, se divide en más slides. Nunca se hace scroll interno.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">05</span>
+          <div><div class="step-title">Forzar viewport fit</div><div class="step-desc">100dvh · overflow:hidden · clamp() en todo · Split si no cabe</div></div>
+        </div>
+      </div>
+      <div class="step" data-detail="Verifica visualmente en 1920×1080, 1280×720, 768×1024, 375×667 y 667×375. Si hay automatización de browser disponible, valida que ningún slide haga scroll y que la navegación funcione.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">06</span>
+          <div><div class="step-title">Validar en múltiples tamaños</div><div class="step-desc">Desktop · Tablet · Mobile · Landscape phone</div></div>
+        </div>
+      </div>
+      <div class="step" data-detail="Elimina los archivos de preview temporales, abre el deck con el opener del OS (start en Windows), y entrega la ruta, preset usado, número de slides y puntos de personalización del tema.">
+        <div class="step-bar"></div>
+        <div class="step-inner">
+          <span class="step-num">07</span>
+          <div><div class="step-title">Entregar</div><div class="step-desc">Limpia previews · Abre en browser · Resume path y customización</div></div>
         </div>
       </div>
     </div>
-  </section>
+    <div id="step-detail-box" class="step-detail" style="margin-top:clamp(.4rem,1vw,.75rem);"></div>
+  </div>
+</section>
 
-  <!-- ===== SLIDE 5: ARCHIVOS DE CONTEXTO ===== -->
-  <section class="slide" id="slide-5" data-slide="5">
-    <div class="grid-bg"></div>
-    <span class="section-label">04 · Archivos de contexto</span>
+<!-- ====================================================
+     SLIDE 5: ARCHIVOS DE CONTEXTO
+     ==================================================== -->
+<section class="slide" id="s5" data-slide="5">
+  <div class="grid-bg"></div>
+  <span class="section-label">04 &middot; Contexto</span>
 
-    <div class="slide-content">
-      <h2 class="reveal">Estructura tu carpeta<br><span class="accent-cyan">de contexto así.</span></h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(0.5rem,2vw,1.5rem);margin-top:clamp(0.5rem,1.5vw,1rem);">
-        <div class="card reveal reveal-delay-2">
-          <div class="file-tree">
-            <div><span class="dir">📁 informe-cartera/</span></div>
-            <div>&nbsp;&nbsp;<span class="dir">📁 contexto/</span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-file">📄 resumen.md</span> <span class="comment-ft">← descripción del informe</span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="highlight-file">📊 datos.csv</span> <span class="comment-ft">← métricas clave</span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 hallazgos.md</span> <span class="comment-ft">← insights del equipo</span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 audiencia.md</span> <span class="comment-ft">← para quién es</span></div>
-            <div>&nbsp;&nbsp;<span class="dir">📁 assets/</span> <span class="comment-ft">← imágenes opcionales</span></div>
-          </div>
+  <div class="slide-content">
+    <h2 class="r">Estructura tu carpeta<br><span class="cy">de contexto así.</span></h2>
+    <div class="hr r d1"></div>
+    <div class="two-col r d2">
+      <div class="card">
+        <div class="file-tree">
+          <div><span class="ft-dir">informe-cartera/</span></div>
+          <div>&nbsp;&nbsp;<span class="ft-dir">contexto/</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-hi">resumen.md</span>&nbsp;<span class="ft-cm">← propósito e instrucciones</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-hi">datos.csv</span>&nbsp;<span class="ft-cm">← métricas clave</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">hallazgos.md</span>&nbsp;<span class="ft-cm">← análisis del equipo</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">audiencia.md</span>&nbsp;<span class="ft-cm">← para quién es el informe</span></div>
+          <div>&nbsp;&nbsp;<span class="ft-dir">assets/</span>&nbsp;<span class="ft-cm">← imágenes opcionales</span></div>
+          <div>&nbsp;&nbsp;<span class="ft-hi">CLAUDE.md</span>&nbsp;<span class="ft-cm">← preset y reglas del equipo</span></div>
         </div>
-
-        <div style="display:flex;flex-direction:column;gap:clamp(0.4rem,1vw,0.75rem);" class="reveal reveal-delay-3">
-          <div class="card">
-            <div class="step-title" style="color:var(--cyan);margin-bottom:0.3rem;">resumen.md</div>
-            <div class="step-desc">Propósito del informe, período, decisiones que se tomarán con él.</div>
-          </div>
-          <div class="card">
-            <div class="step-title" style="color:var(--cyan);margin-bottom:0.3rem;">datos.csv / .xlsx</div>
-            <div class="step-desc">Cifras concretas. Claude las lee, las interpreta y las convierte en slides.</div>
-          </div>
-          <div class="card">
-            <div class="step-title" style="color:var(--cyan);margin-bottom:0.3rem;">hallazgos.md</div>
-            <div class="step-desc">Lo que el equipo ya analizó. Claude lo presenta con jerarquía visual.</div>
-          </div>
+      </div>
+      <div class="file-desc">
+        <div class="fd-item">
+          <div class="fd-title">resumen.md</div>
+          <div class="fd-desc">Propósito del informe, período, decisiones que se tomarán con él y a quién va dirigido.</div>
+        </div>
+        <div class="fd-item">
+          <div class="fd-title">datos.csv / .xlsx</div>
+          <div class="fd-desc">Cifras concretas. Claude las lee, interpreta tendencias y las convierte en slides con jerarquía visual.</div>
+        </div>
+        <div class="fd-item">
+          <div class="fd-title">CLAUDE.md</div>
+          <div class="fd-desc">Fija el preset del equipo, el tono y las reglas de formato. Claude lo aplica sin necesidad de pedirlo cada vez.</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== SLIDE 6: EL COMANDO ===== -->
-  <section class="slide" id="slide-6" data-slide="6">
-    <div class="grid-bg"></div>
-    <div class="glow-magenta" style="width:40vw;height:40vw;bottom:-5vw;right:-5vw;opacity:0.5;"></div>
-    <span class="section-label">05 · El comando</span>
+<!-- ====================================================
+     SLIDE 6: EL COMANDO — tabs con copy
+     ==================================================== -->
+<section class="slide" id="s6" data-slide="6">
+  <div class="grid-bg"></div>
+  <div class="glow" style="width:40vw;height:40vw;bottom:-5vw;right:-5vw;background:radial-gradient(circle,rgba(255,0,128,.1) 0%,transparent 65%);"></div>
+  <span class="section-label">05 &middot; El comando</span>
 
-    <div class="slide-content" style="position:relative;z-index:2;">
-      <div class="tag tag-magenta reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">Paso a paso</div>
-      <h2 class="reveal reveal-delay-1">Así se invoca la skill<br>desde Claude Code.</h2>
+  <div class="slide-content" style="position:relative;z-index:2;">
+    <div class="tag tag-mg r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">Tres formas de invocarlo</div>
+    <h2 class="r d1">Escoge el modo<br>que se ajuste a tu caso.</h2>
 
-      <div class="big-command reveal reveal-delay-2">
-        <div><span style="color:var(--muted);"># Opción 1: descripción libre</span></div>
-        <div><span style="color:var(--magenta);">$</span> <span style="color:var(--cyan);">/frontend-slides</span> Genera informe cartera usando contexto/</div>
-        <br>
-        <div><span style="color:var(--muted);"># Opción 2: especificar el preset visual</span></div>
-        <div><span style="color:var(--magenta);">$</span> <span style="color:var(--cyan);">/frontend-slides</span> Informe mensual, preset "Notebook Tabs", tone corporativo</div>
-        <br>
-        <div><span style="color:var(--muted);"># Opción 3: convertir PPT existente</span></div>
-        <div><span style="color:var(--magenta);">$</span> <span style="color:var(--cyan);">/frontend-slides</span> Convierte informe-julio.pptx y mejora el diseño</div>
+    <div class="r d2">
+      <div class="tab-nav" id="tabNav">
+        <button class="tab-btn active" data-tab="0">Desde notas</button>
+        <button class="tab-btn" data-tab="1">Con preset fijo</button>
+        <button class="tab-btn" data-tab="2">Desde PPT</button>
       </div>
 
-      <p class="reveal reveal-delay-3" style="font-size:var(--small-size);color:var(--muted);">
-        Claude Code lee los archivos, pregunta solo lo mínimo necesario y genera el HTML completo con navegación por teclado, animaciones y responsive.
-      </p>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 7: EL RESULTADO ===== -->
-  <section class="slide" id="slide-7" data-slide="7">
-    <div class="grid-bg"></div>
-    <span class="section-label">06 · Resultado</span>
-
-    <div class="slide-content">
-      <h2 class="reveal">Un archivo HTML.<br><span class="accent-cyan">Cero dependencias.</span><br>Todo adentro.</h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
-
-      <ul class="result-list reveal reveal-delay-2">
-        <li><span class="bullet">▹</span><div><strong>Navegación completa</strong> — teclado (←→), rueda del mouse, swipe en móvil, barra de progreso.</div></li>
-        <li><span class="bullet">▹</span><div><strong>Animaciones en entrada</strong> — cada elemento aparece con timing calculado, sin ser ruidoso.</div></li>
-        <li><span class="bullet">▹</span><div><strong>100% responsive</strong> — se ve igual en 4K, laptop, tablet y celular.</div></li>
-        <li><span class="bullet">▹</span><div><strong>Reducción de movimiento</strong> — respeta <span class="mono accent-cyan">prefers-reduced-motion</span> automáticamente.</div></li>
-        <li><span class="bullet">▹</span><div><strong>Abre directo en el browser</strong> — doble clic al archivo. Sin instalar nada, sin servidor.</div></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 8: CONSISTENCIA ===== -->
-  <section class="slide" id="slide-8" data-slide="8">
-    <div class="grid-bg"></div>
-    <span class="section-label">07 · Consistencia</span>
-
-    <div class="slide-content">
-      <div class="tag tag-cyan reveal" style="margin-bottom:clamp(0.5rem,1.5vw,1rem);">El verdadero valor</div>
-      <h2 class="reveal reveal-delay-1">Mismo formato.<br><span class="accent-cyan">Cada informe.</span><br>Sin esfuerzo extra.</h2>
-
-      <div class="consistency-grid reveal reveal-delay-2">
-        <div class="consistency-card">
-          <div class="consistency-icon">🎨</div>
-          <div class="consistency-title">Identidad visual</div>
-          <div class="consistency-desc">Un preset = mismo look en todos los informes del equipo.</div>
-        </div>
-        <div class="consistency-card">
-          <div class="consistency-icon">📐</div>
-          <div class="consistency-title">Estructura fija</div>
-          <div class="consistency-desc">Siempre: título → problema → datos → hallazgos → CTA.</div>
-        </div>
-        <div class="consistency-card">
-          <div class="consistency-icon">⚡</div>
-          <div class="consistency-title">Velocidad</div>
-          <div class="consistency-desc">De contexto a presentación en minutos, no en horas.</div>
+      <div class="tab-pane active" id="tab-0">
+        <div class="code-blk">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <div><span class="c-comm"># descripción libre — Claude elige el estilo</span></div>
+          <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span></div>
+          <div><span class="c-arg">&nbsp;&nbsp;Genera el informe mensual de cartera usando los archivos en contexto/</span></div>
         </div>
       </div>
-
-      <div class="card card-glow reveal reveal-delay-3" style="margin-top:clamp(0.5rem,1.5vw,1rem);text-align:center;">
-        <p style="font-size:var(--body-size);color:var(--white);">
-          El equipo ya no decide cómo se ve el informe — <strong style="color:var(--cyan);">el sistema lo decide.</strong> Todos se enfocan en el contenido.
-        </p>
+      <div class="tab-pane" id="tab-1">
+        <div class="code-blk">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <div><span class="c-comm"># especifica preset para formato consistente del equipo</span></div>
+          <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span></div>
+          <div><span class="c-arg">&nbsp;&nbsp;Informe julio, preset "Notebook Tabs", tono corporativo. Ver contexto/</span></div>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 9: LOS 12 PRESETS ===== -->
-  <section class="slide" id="slide-9" data-slide="9">
-    <div class="grid-bg"></div>
-    <span class="section-label">08 · Estilos</span>
-
-    <div class="slide-content">
-      <h2 class="reveal">12 presets visuales.<br><span class="accent-cyan">Elige el feeling.</span></h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
-
-      <div class="preset-list reveal reveal-delay-2">
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#ff6b00;"></div>
-          <div><div class="preset-name">Bold Signal</div><div class="preset-use">Pitches, lanzamientos, impacto</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#4f6ef7;"></div>
-          <div><div class="preset-name">Electric Studio</div><div class="preset-use">Revisiones estratégicas, clientes</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#d4b483;"></div>
-          <div><div class="preset-name">Notebook Tabs</div><div class="preset-use">Reportes, revisiones estructuradas</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#00d4ff;"></div>
-          <div><div class="preset-name">Neon Cyber</div><div class="preset-use">Herramientas tech, IA, futuro</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#c8e6c9;"></div>
-          <div><div class="preset-name">Swiss Modern</div><div class="preset-use">Corporativo, datos, estrategia</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#9c7c5c;"></div>
-          <div><div class="preset-name">Dark Botanical</div><div class="preset-use">Premium, narrativas cuidadas</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#e91e8c;"></div>
-          <div><div class="preset-name">Creative Voltage</div><div class="preset-use">Marca, producto, storytelling</div></div>
-        </div>
-        <div class="preset-item">
-          <div class="preset-dot" style="background:#f4a261;"></div>
-          <div><div class="preset-name">Vintage Editorial</div><div class="preset-use">Charlas, narrativas opinionadas</div></div>
+      <div class="tab-pane" id="tab-2">
+        <div class="code-blk">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <div><span class="c-comm"># convierte PPT existente y mejora el diseño</span></div>
+          <div><span class="c-prompt">$ </span><span class="c-cmd">/frontend-slides</span></div>
+          <div><span class="c-arg">&nbsp;&nbsp;Convierte informe-julio.pptx y aplica el preset "Electric Studio"</span></div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- ===== SLIDE 10: FLUJO RECOMENDADO ===== -->
-  <section class="slide" id="slide-10" data-slide="10">
-    <div class="grid-bg"></div>
-    <span class="section-label">09 · Flujo de trabajo</span>
+    <p class="r d3" style="font-size:var(--small);color:var(--muted);margin-top:clamp(.5rem,1vw,.75rem);">
+      Claude Code lee los archivos, hace las preguntas mínimas necesarias y entrega el HTML completo listo para abrir.
+    </p>
+  </div>
+</section>
 
-    <div class="slide-content">
-      <h2 class="reveal">El flujo completo<br><span class="accent-cyan">para tu equipo.</span></h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
+<!-- ====================================================
+     SLIDE 7: EL RESULTADO
+     ==================================================== -->
+<section class="slide" id="s7" data-slide="7">
+  <div class="grid-bg"></div>
+  <span class="section-label">06 &middot; Resultado</span>
 
-      <div class="workflow-row reveal reveal-delay-2">
-        <div class="wf-box">
-          <div class="wf-icon">📁</div>
-          <div class="wf-title">1. Prepara</div>
-          <div class="wf-desc">Centraliza datos, hallazgos y objetivos en archivos .md / .csv</div>
-        </div>
-        <div class="wf-arrow">→</div>
-        <div class="wf-box">
-          <div class="wf-icon">⌨️</div>
-          <div class="wf-title">2. Invoca</div>
-          <div class="wf-desc"><span class="mono accent-cyan">/frontend-slides</span><br>+ descripción del informe</div>
-        </div>
-        <div class="wf-arrow">→</div>
-        <div class="wf-box">
-          <div class="wf-icon">🎨</div>
-          <div class="wf-title">3. Elige estilo</div>
-          <div class="wf-desc">Claude genera 3 previews visuales o aplica el preset del equipo</div>
-        </div>
-        <div class="wf-arrow">→</div>
-        <div class="wf-box" style="border-color:rgba(0,212,255,0.4);box-shadow:0 0 20px rgba(0,212,255,0.1);">
-          <div class="wf-icon">✅</div>
-          <div class="wf-title">4. Listo</div>
-          <div class="wf-desc">HTML completo, abre en navegador, comparte o exporta</div>
+  <div class="slide-content">
+    <h2 class="r">Un archivo HTML.<br><span class="cy">Cero dependencias.</span><br>Todo adentro.</h2>
+    <div class="hr r d1"></div>
+    <ul class="result-list r d2">
+      <li><span class="rl-bullet">&#9657;</span><div><strong>Navegación completa</strong> — teclado (&#8592;&#8594;), rueda del mouse, swipe táctil, barra de progreso superior.</div></li>
+      <li><span class="rl-bullet">&#9657;</span><div><strong>Animaciones en entrada</strong> — cada elemento aparece con timing calculado usando IntersectionObserver, sin ser ruidoso.</div></li>
+      <li><span class="rl-bullet">&#9657;</span><div><strong>100% responsive</strong> — se ve igual en 4K, laptop, tablet y celular. Todo con <span class="mono cy">clamp()</span>.</div></li>
+      <li><span class="rl-bullet">&#9657;</span><div><strong>Reducción de movimiento</strong> — respeta <span class="mono cy">prefers-reduced-motion</span> automáticamente.</div></li>
+      <li><span class="rl-bullet">&#9657;</span><div><strong>Abre en el browser sin servidor</strong> — doble clic al archivo. Sin instalar nada externo.</div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ====================================================
+     SLIDE 8: CONSISTENCIA — toggles interactivos
+     ==================================================== -->
+<section class="slide" id="s8" data-slide="8">
+  <div class="grid-bg"></div>
+  <span class="section-label">07 &middot; Consistencia</span>
+
+  <div class="slide-content">
+    <div class="tag tag-cy r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">El verdadero valor</div>
+    <h2 class="r d1">Activa el estándar<br><span class="cy">del equipo.</span></h2>
+
+    <div class="toggle-demo r d2">
+      <div class="toggle-row" id="tog-1">
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-1')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Formato visual unificado</div>
+          <div class="tl-off">Cada persona elige colores y fuentes distintos.</div>
+          <div class="tl-on">Un preset en CLAUDE.md — mismo look en todos los informes del equipo.</div>
         </div>
       </div>
-
-      <div class="card reveal reveal-delay-3" style="margin-top:clamp(0.5rem,1.5vw,1rem);">
-        <p style="font-size:var(--small-size);color:var(--muted);">
-          <strong style="color:var(--white);">Tip para el equipo:</strong> guarda un preset fijo en las instrucciones del proyecto (<span class="mono accent-cyan">CLAUDE.md</span>) para que todos los informes salgan con el mismo look sin tener que pedirlo cada vez.
-        </p>
+      <div class="toggle-row" id="tog-2">
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-2')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Estructura de slides fija</div>
+          <div class="tl-off">Cada informe tiene un orden diferente de slides.</div>
+          <div class="tl-on">Siempre: título → problema → datos → hallazgos → próximos pasos.</div>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 11: BENEFICIOS ===== -->
-  <section class="slide" id="slide-11" data-slide="11">
-    <div class="grid-bg"></div>
-    <span class="section-label">10 · Beneficios</span>
-
-    <div class="slide-content">
-      <h2 class="reveal">Lo que gana el equipo<br><span class="accent-cyan">desde el primer informe.</span></h2>
-      <div class="hr-cyan reveal reveal-delay-1"></div>
-
-      <div class="benefit-cols reveal reveal-delay-2">
-        <div class="benefit-item">
-          <div class="benefit-icon">🕐</div>
-          <div>
-            <div class="benefit-title">Horas devueltas al equipo</div>
-            <div class="benefit-desc">De 3-4h de armado manual a ~15 minutos de preparar contexto.</div>
-          </div>
+      <div class="toggle-row" id="tog-3">
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-3')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Actualización instantánea</div>
+          <div class="tl-off">Un dato cambia → rehace el deck completo a mano.</div>
+          <div class="tl-on">Actualiza el .csv → ejecuta el comando → presentación rehecha en minutos.</div>
         </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">🏆</div>
-          <div>
-            <div class="benefit-title">Calidad profesional siempre</div>
-            <div class="benefit-desc">Tipografía, animaciones y layout que harían envidiar a un diseñador.</div>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">🔄</div>
-          <div>
-            <div class="benefit-title">Actualizaciones instantáneas</div>
-            <div class="benefit-desc">Cambió un dato → actualiza el archivo → regenera → listo.</div>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">📐</div>
-          <div>
-            <div class="benefit-title">Estándar del equipo</div>
-            <div class="benefit-desc">Todos los informes lucen iguales. Una sola identidad visual.</div>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">🌐</div>
-          <div>
-            <div class="benefit-title">Sin herramientas externas</div>
-            <div class="benefit-desc">Sin PowerPoint, sin Canva, sin Figma. Un HTML que abre en cualquier browser.</div>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">🧠</div>
-          <div>
-            <div class="benefit-title">Foco en el análisis</div>
-            <div class="benefit-desc">El equipo piensa en los datos, no en cómo se verán las slides.</div>
-          </div>
+      </div>
+      <div class="toggle-row" id="tog-4">
+        <label class="toggle-switch">
+          <input type="checkbox" onchange="toggleRow(this,'tog-4')">
+          <span class="toggle-track"></span>
+        </label>
+        <div class="toggle-label">
+          <div class="tl-title">Foco del equipo en el análisis</div>
+          <div class="tl-off">El equipo pierde tiempo en diseño y formato visual.</div>
+          <div class="tl-on">El equipo se enfoca en los datos. Claude decide cómo se ve.</div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ===== SLIDE 12: CTA ===== -->
-  <section class="slide" id="slide-12" data-slide="12">
-    <div class="grid-bg"></div>
-    <div class="cta-glow"></div>
+<!-- ====================================================
+     SLIDE 9: 12 PRESETS — selector interactivo
+     ==================================================== -->
+<section class="slide" id="s9" data-slide="9">
+  <div class="grid-bg"></div>
+  <span class="section-label">08 &middot; Estilos</span>
 
-    <div class="cta-content">
-      <div class="tag tag-cyan reveal" style="margin-bottom:0.5rem;">Empieza hoy</div>
-      <h2 class="reveal reveal-delay-1">Tu próximo<br>informe,<br>así.</h2>
-      <p class="cta-sub reveal reveal-delay-2">
-        Prepara un archivo <span class="mono" style="color:var(--cyan);">contexto.md</span> con el resumen de tu informe y escribe:
-      </p>
-      <div class="cta-command reveal reveal-delay-3">
-        <span style="color:var(--magenta);">$ </span>/frontend-slides &nbsp;[describe tu informe]
+  <div class="slide-content">
+    <h2 class="r">12 presets visuales.<br><span class="cy">Explora cada uno.</span></h2>
+    <div class="hr r d1"></div>
+
+    <div class="preset-picker r d2">
+      <div class="preset-chips" id="presetChips"></div>
+      <div class="preset-preview" id="presetPreview">
+        <div class="pp-title" id="ppTitle">Bold Signal</div>
+        <div class="pp-sub" id="ppSub">pitch · lanzamiento · impacto</div>
       </div>
-      <p class="reveal reveal-delay-4" style="font-size:var(--small-size);color:var(--muted);max-width:42ch;text-align:center;">
-        Guarda el preset preferido del equipo en <span class="mono accent-cyan">CLAUDE.md</span> para que sea el formato oficial de todos los informes.
-      </p>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- ====================================================
+     SLIDE 10: FLUJO — pipeline clickeable
+     ==================================================== -->
+<section class="slide" id="s10" data-slide="10">
+  <div class="grid-bg"></div>
+  <span class="section-label">09 &middot; Flujo</span>
+
+  <div class="slide-content">
+    <h2 class="r">El flujo completo<br><span class="cy">paso a paso.</span></h2>
+    <div class="hr r d1"></div>
+
+    <div class="pipeline r d2" id="pipeline">
+      <div class="pl-step active" data-detail="Centraliza datos, hallazgos y objetivos en archivos .md y .csv dentro de una carpeta /contexto. Añade CLAUDE.md con el preset del equipo.">
+        <div class="pl-num">1</div>
+        <div class="pl-title">Prepara</div>
+        <div class="pl-sub">Contexto en archivos</div>
+      </div>
+      <div class="pl-step" data-detail="Abre Claude Code y escribe /frontend-slides seguido de una descripción del informe. Puedes apuntar a la carpeta de contexto directamente.">
+        <div class="pl-num">2</div>
+        <div class="pl-title">Invoca</div>
+        <div class="pl-sub">/frontend-slides</div>
+      </div>
+      <div class="pl-step" data-detail="Claude genera 3 previews visuales o aplica el preset definido en CLAUDE.md. Tú apruebas o ajustas en segundos.">
+        <div class="pl-num">3</div>
+        <div class="pl-title">Estilo</div>
+        <div class="pl-sub">Preset o 3 previews</div>
+      </div>
+      <div class="pl-step" data-detail="Claude construye, valida viewport fit en 5 tamaños y elimina los archivos temporales. Entrega el HTML listo.">
+        <div class="pl-num">4</div>
+        <div class="pl-title">Genera</div>
+        <div class="pl-sub">Build + validación</div>
+      </div>
+      <div class="pl-step" data-detail="El archivo HTML se abre en el browser con doble clic. Sin servidor, sin dependencias, sin instalaciones. Listo para presentar o compartir.">
+        <div class="pl-num">5</div>
+        <div class="pl-title">Presenta</div>
+        <div class="pl-sub">Abre en browser</div>
+      </div>
+    </div>
+
+    <div class="pl-detail r d3" id="plDetail">
+      Haz clic en cada etapa para ver el detalle.
+    </div>
+
+    <div class="pl-controls r d3">
+      <button class="pl-btn pl-prev" onclick="pipelineNav(-1)">&#8592; anterior</button>
+      <button class="pl-btn pl-next" onclick="pipelineNav(1)">siguiente &#8594;</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     SLIDE 11: BENEFICIOS
+     ==================================================== -->
+<section class="slide" id="s11" data-slide="11">
+  <div class="grid-bg"></div>
+  <span class="section-label">10 &middot; Beneficios</span>
+
+  <div class="slide-content">
+    <h2 class="r">Lo que gana el equipo<br><span class="cy">desde el primer informe.</span></h2>
+    <div class="hr r d1"></div>
+    <div class="ben-grid r d2">
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Horas devueltas</div>
+        <div class="ben-desc">De 3-4 h de armado manual a ~15 min de preparar contexto.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Calidad profesional</div>
+        <div class="ben-desc">Tipografía, animaciones y layout de nivel diseñador, siempre.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Actualizaciones rápidas</div>
+        <div class="ben-desc">Cambia el dato, regenera, listo. Sin reproceso manual.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Estándar de equipo</div>
+        <div class="ben-desc">Todos los informes con una sola identidad visual.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Sin herramientas externas</div>
+        <div class="ben-desc">Un HTML que abre en cualquier browser. Cero licencias.</div>
+      </div>
+      <div class="ben-card">
+        <div class="ben-mark"></div>
+        <div class="ben-title">Foco en el análisis</div>
+        <div class="ben-desc">El equipo piensa en los datos. Claude decide cómo se ven.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     SLIDE 12: CTA
+     ==================================================== -->
+<section class="slide" id="s12" data-slide="12">
+  <div class="grid-bg"></div>
+  <div class="cta-glow"></div>
+
+  <div class="cta-inner">
+    <div class="tag tag-cy r">Empieza hoy</div>
+    <h2 class="grad r d1">Tu próximo<br>informe,<br>así.</h2>
+    <p class="cta-sub r d2">Crea un archivo <span class="mono cy">contexto/resumen.md</span> con el propósito de tu informe y ejecuta:</p>
+    <div class="cta-cmd r d3" id="ctaCmd" onclick="copyCta(this)">
+      <span class="c-prompt">$ </span>/frontend-slides &nbsp;[describe tu informe]
+      <div class="copied-msg">copiado al portapapeles</div>
+    </div>
+    <p class="claude-md-tip r d4">
+      Guarda el preset preferido del equipo en <span class="mono cy">CLAUDE.md</span> para que sea el formato oficial de todos los informes — sin tener que pedirlo cada vez.
+    </p>
+  </div>
+</section>
 
 </main>
 
 <script>
-// ============================================
+// ============================================================
 // PRESENTATION CONTROLLER
-// ============================================
+// ============================================================
 class PresentationController {
   constructor() {
     this.slides = Array.from(document.querySelectorAll('.slide'));
-    this.total = this.slides.length;
-    this.current = 0;
-    this.isScrolling = false;
-    this.progressBar = document.getElementById('progressBar');
-    this.slideCounter = document.getElementById('slideCounter');
+    this.total  = this.slides.length;
+    this.cur    = 0;
+    this.bar    = document.getElementById('progressBar');
+    this.ctr    = document.getElementById('slideCounter');
 
-    this.setupRevealObserver();
-    this.setupNavigation();
+    this.setupReveal();
+    this.setupNav();
     this.updateUI();
-
-    // Trigger first slide reveals
-    setTimeout(() => this.revealSlide(0), 100);
+    setTimeout(() => this.revealSlide(0), 120);
   }
 
-  setupRevealObserver() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const slideIndex = this.slides.indexOf(entry.target);
-          if (slideIndex !== -1) {
-            this.current = slideIndex;
-            this.updateUI();
-            this.revealSlide(slideIndex);
-          }
+  setupReveal() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const i = this.slides.indexOf(e.target);
+          if (i !== -1) { this.cur = i; this.updateUI(); this.revealSlide(i); }
         }
       });
     }, { threshold: 0.5 });
-
-    this.slides.forEach(slide => observer.observe(slide));
+    this.slides.forEach(s => obs.observe(s));
   }
 
-  revealSlide(index) {
-    const slide = this.slides[index];
-    if (!slide) return;
-    const reveals = slide.querySelectorAll('.reveal');
-    reveals.forEach(el => el.classList.add('visible'));
+  revealSlide(i) {
+    const s = this.slides[i];
+    if (!s) return;
+    s.querySelectorAll('.r').forEach(el => el.classList.add('on'));
   }
 
   updateUI() {
-    const progress = ((this.current + 1) / this.total) * 100;
-    this.progressBar.style.width = progress + '%';
-    const n = String(this.current + 1).padStart(2, '0');
-    const t = String(this.total).padStart(2, '0');
-    this.slideCounter.textContent = `${n} / ${t}`;
+    this.bar.style.width = ((this.cur+1)/this.total*100)+'%';
+    this.ctr.textContent = String(this.cur+1).padStart(2,'0')+' / '+String(this.total).padStart(2,'0');
   }
 
-  goTo(index) {
-    if (index < 0 || index >= this.total) return;
-    this.slides[index].scrollIntoView({ behavior: 'smooth' });
+  goTo(i) {
+    if (i < 0 || i >= this.total) return;
+    this.slides[i].scrollIntoView({ behavior: 'smooth' });
   }
 
-  next() { this.goTo(this.current + 1); }
-  prev() { this.goTo(this.current - 1); }
-
-  setupNavigation() {
-    // Keyboard
-    document.addEventListener('keydown', (e) => {
-      switch (e.key) {
-        case 'ArrowDown':
-        case 'ArrowRight':
-        case ' ':
-          e.preventDefault();
-          this.next();
-          break;
-        case 'ArrowUp':
-        case 'ArrowLeft':
-          e.preventDefault();
-          this.prev();
-          break;
-        case 'Home': e.preventDefault(); this.goTo(0); break;
-        case 'End': e.preventDefault(); this.goTo(this.total - 1); break;
-      }
+  setupNav() {
+    document.addEventListener('keydown', e => {
+      if (['ArrowDown','ArrowRight',' '].includes(e.key)) { e.preventDefault(); this.goTo(this.cur+1); }
+      if (['ArrowUp','ArrowLeft'].includes(e.key))        { e.preventDefault(); this.goTo(this.cur-1); }
+      if (e.key==='Home') this.goTo(0);
+      if (e.key==='End')  this.goTo(this.total-1);
     });
 
-    // Wheel
-    let wheelCooldown = false;
-    window.addEventListener('wheel', (e) => {
-      if (wheelCooldown) return;
-      wheelCooldown = true;
-      if (e.deltaY > 0) this.next();
-      else this.prev();
-      setTimeout(() => { wheelCooldown = false; }, 800);
+    let wcd = false;
+    window.addEventListener('wheel', e => {
+      if (wcd) return; wcd = true;
+      e.deltaY > 0 ? this.goTo(this.cur+1) : this.goTo(this.cur-1);
+      setTimeout(()=>{ wcd=false; }, 800);
     }, { passive: true });
 
-    // Touch
-    let touchStartY = 0;
-    let touchStartX = 0;
-    window.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
-    }, { passive: true });
-
-    window.addEventListener('touchend', (e) => {
-      const dy = touchStartY - e.changedTouches[0].clientY;
-      const dx = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 40) {
-        if (dy > 0) this.next();
-        else this.prev();
-      }
-    }, { passive: true });
+    let ty=0, tx=0;
+    window.addEventListener('touchstart', e=>{ ty=e.touches[0].clientY; tx=e.touches[0].clientX; }, {passive:true});
+    window.addEventListener('touchend',   e=>{
+      const dy=ty-e.changedTouches[0].clientY, dx=tx-e.changedTouches[0].clientX;
+      if (Math.abs(dy)>Math.abs(dx) && Math.abs(dy)>40) dy>0 ? this.goTo(this.cur+1) : this.goTo(this.cur-1);
+    }, {passive:true});
   }
 }
 
-// Boot
-document.addEventListener('DOMContentLoaded', () => {
-  new PresentationController();
+// ============================================================
+// SLIDE 4 — STEPPER
+// ============================================================
+(function(){
+  const steps   = document.querySelectorAll('#stepper .step');
+  const detBox  = document.getElementById('step-detail-box');
+
+  function activateStep(el) {
+    steps.forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    detBox.textContent = el.dataset.detail;
+    detBox.classList.add('open');
+  }
+
+  steps.forEach(s => {
+    s.addEventListener('click', () => activateStep(s));
+  });
+
+  // Show detail for first active step on load
+  activateStep(steps[0]);
+})();
+
+// ============================================================
+// SLIDE 6 — TABS
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const nav   = btn.closest('.tab-nav');
+    const panes = btn.closest('.r').querySelectorAll('.tab-pane');
+    nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    panes.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
 });
+
+function copyCode(btn) {
+  const blk  = btn.closest('.code-blk');
+  const text = blk.innerText.replace('copiar','').replace('copiado','').trim();
+  navigator.clipboard.writeText(text).catch(()=>{});
+  btn.textContent = 'copiado';
+  btn.classList.add('copied');
+  setTimeout(()=>{ btn.textContent='copiar'; btn.classList.remove('copied'); }, 2000);
+}
+
+// ============================================================
+// SLIDE 8 — TOGGLES
+// ============================================================
+function toggleRow(inp, id) {
+  document.getElementById(id).classList.toggle('active', inp.checked);
+}
+
+// ============================================================
+// SLIDE 9 — PRESET PICKER
+// ============================================================
+const PRESETS = [
+  { name:'Bold Signal',      sub:'pitch · lanzamiento · impacto',         bg:'#0f0804', fg:'#ff6b00', text:'#fff' },
+  { name:'Electric Studio',  sub:'revisiones estratégicas · clientes',    bg:'#000',    fg:'#4f6ef7', text:'#fff' },
+  { name:'Creative Voltage', sub:'marca · producto · storytelling',       bg:'#060820', fg:'#ffe600', text:'#fff' },
+  { name:'Dark Botanical',   sub:'premium · narrativa · lujo',            bg:'#0c0908', fg:'#c8a96e', text:'#f5f0e8' },
+  { name:'Notebook Tabs',    sub:'reportes · revisiones estructuradas',   bg:'#2a2825', fg:'#d4b483', text:'#fef8ef' },
+  { name:'Pastel Geometry',  sub:'onboarding · producto · amigable',      bg:'#e8f4fd', fg:'#6a9fd8', text:'#1a2a3a' },
+  { name:'Split Pastel',     sub:'agencias · workshops · portfolios',     bg:'#f9ede6', fg:'#b088c0', text:'#2a1a2a' },
+  { name:'Vintage Editorial',sub:'charlas · narrativas opinionadas',      bg:'#f5f0e0', fg:'#8b4513', text:'#1a0a00' },
+  { name:'Neon Cyber',       sub:'IA · infraestructura · dev tools',      bg:'#030712', fg:'#00d4ff', text:'#f0f6ff' },
+  { name:'Terminal Green',   sub:'APIs · CLI · demos de ingeniería',      bg:'#0d1117', fg:'#39d353', text:'#e6edf3' },
+  { name:'Swiss Modern',     sub:'corporativo · estrategia · analytics',  bg:'#fff',    fg:'#e00',    text:'#111'   },
+  { name:'Paper & Ink',      sub:'ensayos · keynotes · manifiestos',      bg:'#faf6ed', fg:'#9b2335', text:'#1a1008' },
+];
+
+(function(){
+  const chips   = document.getElementById('presetChips');
+  const preview = document.getElementById('presetPreview');
+  const ppTitle = document.getElementById('ppTitle');
+  const ppSub   = document.getElementById('ppSub');
+
+  PRESETS.forEach((p, i) => {
+    const c = document.createElement('button');
+    c.className = 'p-chip' + (i===0?' sel':'');
+    c.textContent = p.name;
+    c.addEventListener('click', () => {
+      chips.querySelectorAll('.p-chip').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      applyPreset(p);
+    });
+    chips.appendChild(c);
+  });
+
+  function applyPreset(p) {
+    preview.style.background = p.bg;
+    preview.style.borderColor = p.fg+'55';
+    preview.style.boxShadow  = '0 0 30px '+p.fg+'22';
+    ppTitle.style.color  = p.fg;
+    ppTitle.textContent  = p.name;
+    ppSub.style.color    = p.text+'99';
+    ppSub.textContent    = p.sub;
+  }
+  applyPreset(PRESETS[0]);
+})();
+
+// ============================================================
+// SLIDE 10 — PIPELINE
+// ============================================================
+const plSteps  = Array.from(document.querySelectorAll('#pipeline .pl-step'));
+const plDetail = document.getElementById('plDetail');
+let plActive   = 0;
+
+function setPlStep(i) {
+  plActive = Math.max(0, Math.min(i, plSteps.length-1));
+  plSteps.forEach((s, idx) => {
+    s.classList.remove('active','done');
+    if (idx === plActive) s.classList.add('active');
+    else if (idx < plActive) s.classList.add('done');
+  });
+  plDetail.textContent = plSteps[plActive].dataset.detail;
+}
+
+plSteps.forEach((s,i) => s.addEventListener('click', ()=>setPlStep(i)));
+setPlStep(0);
+
+function pipelineNav(dir) { setPlStep(plActive+dir); }
+
+// ============================================================
+// SLIDE 12 — COPY CTA
+// ============================================================
+function copyCta(el) {
+  navigator.clipboard.writeText('/frontend-slides [describe tu informe]').catch(()=>{});
+  el.classList.add('copied');
+  setTimeout(()=>el.classList.remove('copied'), 2000);
+}
+
+// Boot
+document.addEventListener('DOMContentLoaded', () => new PresentationController());
 </script>
 </body>
 </html>
