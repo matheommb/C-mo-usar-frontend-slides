@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Presentaciones Procesos — IA para tu equipo</title>
+<title>Presentaciones Procesos — IA para nuestro equipo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -390,10 +390,52 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
 /* ==============================================
    SLIDE 12 — CTA
    ============================================== */
-#s12 { background:var(--bg); align-items:center; justify-content:center; text-align:center; }
+#s12 { background:var(--bg); align-items:center; justify-content:center; text-align:center; overflow:hidden; }
 .cta-glow { position:absolute; width:65vw; height:65vw; top:50%; left:50%;
   transform:translate(-50%,-50%);
   background:radial-gradient(circle, rgba(0,212,255,.09) 0%, transparent 65%); pointer-events:none; }
+
+/* 3D orbit background */
+.cta-orbit { position:absolute; inset:0; pointer-events:none; }
+.orbit-scene { position:absolute; top:50%; left:50%;
+  width:clamp(260px,40vw,520px); height:clamp(260px,40vw,520px);
+  transform:translate(-50%,-50%); perspective:900px; }
+.orbit-cube { width:100%; height:100%; transform-style:preserve-3d;
+  animation:orbitSpin 28s linear infinite; }
+@keyframes orbitSpin {
+  0%   { transform:rotateX(22deg) rotateY(0deg); }
+  100% { transform:rotateX(22deg) rotateY(360deg); }
+}
+.orbit-face { position:absolute; inset:0;
+  border:1px solid rgba(0,212,255,.08);
+  background:rgba(0,212,255,.02); }
+.orbit-face.of { transform:translateZ(calc(clamp(130px,20vw,260px))); }
+.orbit-face.ob { transform:rotateY(180deg) translateZ(calc(clamp(130px,20vw,260px))); }
+.orbit-face.ol { transform:rotateY(-90deg) translateZ(calc(clamp(130px,20vw,260px))); }
+.orbit-face.or { transform:rotateY( 90deg) translateZ(calc(clamp(130px,20vw,260px))); }
+.orbit-face.ot { transform:rotateX( 90deg) translateZ(calc(clamp(130px,20vw,260px))); }
+.orbit-face.om { transform:rotateX(-90deg) translateZ(calc(clamp(130px,20vw,260px))); }
+
+/* second smaller cube, counter-rotating */
+.orbit-cube2 { position:absolute; top:50%; left:50%;
+  width:clamp(100px,16vw,200px); height:clamp(100px,16vw,200px);
+  transform:translate(-50%,-50%) rotateX(-15deg) rotateY(0deg);
+  transform-style:preserve-3d;
+  animation:orbitSpin2 18s linear infinite; }
+@keyframes orbitSpin2 {
+  0%   { transform:translate(-50%,-50%) rotateX(-15deg) rotateY(0deg); }
+  100% { transform:translate(-50%,-50%) rotateX(-15deg) rotateY(-360deg); }
+}
+.orbit-face2 { position:absolute; inset:0;
+  border:1px solid rgba(255,0,128,.12);
+  background:rgba(255,0,128,.025); }
+.orbit-face2.of2 { transform:translateZ(calc(clamp(50px,8vw,100px))); }
+.orbit-face2.ob2 { transform:rotateY(180deg) translateZ(calc(clamp(50px,8vw,100px))); }
+.orbit-face2.ol2 { transform:rotateY(-90deg) translateZ(calc(clamp(50px,8vw,100px))); }
+.orbit-face2.or2 { transform:rotateY( 90deg) translateZ(calc(clamp(50px,8vw,100px))); }
+.orbit-face2.ot2 { transform:rotateX( 90deg) translateZ(calc(clamp(50px,8vw,100px))); }
+.orbit-face2.om2 { transform:rotateX(-90deg) translateZ(calc(clamp(50px,8vw,100px))); }
+
 #s12 .cta-inner { position:relative; z-index:2; display:flex; flex-direction:column;
   align-items:center; gap:clamp(.6rem,1.5vw,1.25rem); padding:var(--pad); }
 #s12 h2 { font-size:clamp(1.5rem,6vw,5rem); line-height:1.05; letter-spacing:-.02em; }
@@ -410,7 +452,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
 <body>
 
 <div class="progress-bar" id="progressBar"></div>
-<div class="slide-counter" id="slideCounter">01 / 12</div>
+<div class="slide-counter" id="slideCounter">01 / 10</div>
 <div class="keyboard-hint">&#8592; &#8594; &nbsp;&middot;&nbsp; rueda &nbsp;&middot;&nbsp; swipe</div>
 
 <main>
@@ -428,7 +470,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
       <div style="flex:1;min-width:0;">
         <div class="eyebrow r">
           <div class="eyebrow-line"></div>
-          <span class="mono mu" style="letter-spacing:.15em;text-transform:uppercase;font-size:var(--small);">Agente de IA para tu equipo</span>
+          <span class="mono mu" style="letter-spacing:.15em;text-transform:uppercase;font-size:var(--small);">Agente de IA para nuestro equipo</span>
         </div>
         <h1 class="r d1">Presentaciones<br><span class="grad">Procesos.</span></h1>
         <p class="r d2" style="font-size:clamp(.85rem,1.8vw,1.2rem);color:rgba(240,246,255,.55);max-width:40ch;margin-top:clamp(.5rem,1.5vw,1rem);">
@@ -466,7 +508,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
     <div class="flip-grid r d2">
       <div class="flip-wrap"><div class="flip-card">
         <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Tiempo perdido</div><div class="flip-desc">Horas organizando datos en slides, ajustando formato y alineando colores.</div></div>
-        <div class="flip-back"><div class="flip-title cy">Minutos, no horas</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">El agente lee tus archivos y construye el deck completo mientras tú te enfocas en el contenido.</div></div>
+        <div class="flip-back"><div class="flip-title cy">Minutos, no horas</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">El agente lee nuestros archivos y construye el deck completo mientras nos enfocamos en el contenido.</div></div>
       </div></div>
       <div class="flip-wrap"><div class="flip-card">
         <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Sin estándar de equipo</div><div class="flip-desc">Cada presentación luce diferente. No hay una identidad visual consistente.</div></div>
@@ -503,7 +545,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
       <div class="how-step highlight">
         <div class="how-num">2</div>
         <div class="how-title">Describe lo que quieres</div>
-        <div class="how-desc">En lenguaje natural. "Hazme una presentación de 10 slides para el comité directivo con los resultados de julio."</div>
+        <div class="how-desc">En lenguaje natural. "Hazme un informe de 10 slides con la información adjunta para presentar los hallazgos de la iniciativa."</div>
       </div>
       <div class="how-step">
         <div class="how-num">3</div>
@@ -525,20 +567,20 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
     <h2 class="r d1">Así se ve hablar<br><span class="cy">con Presentaciones Procesos.</span></h2>
     <div class="chat-shell r d2" id="chatShell">
       <div class="chat-msg user" id="cm1">
-        <div class="chat-avatar user-av">TÚ</div>
-        <div class="chat-bubble">Tengo el informe de cartera de julio en Excel. Necesito una presentación para el comité directivo, unas 8 slides.</div>
+        <div class="chat-avatar user-av">YO</div>
+        <div class="chat-bubble">Hazme un informe de 10 slides con la información adjunta para presentar los hallazgos de la iniciativa al comité directivo.</div>
       </div>
       <div class="chat-msg agent" id="cm2">
         <div class="chat-avatar ai-av">PP</div>
-        <div class="chat-bubble">Perfecto. ¿Quieres que use la plantilla corporativa de SISTECREDITO o prefieres un estilo nuevo?</div>
+        <div class="chat-bubble">Perfecto. ¿Usamos la plantilla corporativa de nuestro equipo o prefieres un estilo nuevo para esta presentación?</div>
       </div>
       <div class="chat-msg user" id="cm3">
-        <div class="chat-avatar user-av">TÚ</div>
+        <div class="chat-avatar user-av">YO</div>
         <div class="chat-bubble">Usa la plantilla corporativa, por favor.</div>
       </div>
       <div class="chat-msg agent" id="cm4">
         <div class="chat-avatar ai-av">PP</div>
-        <div class="chat-bubble">Listo. Generé 8 slides con el formato corporativo: resumen ejecutivo, evolución de cartera, indicadores clave, hallazgos y próximos pasos. Aquí está tu presentación.</div>
+        <div class="chat-bubble">Listo. Generé 10 slides con nuestra identidad corporativa: contexto de la iniciativa, hallazgos clave, análisis de impacto y próximos pasos. Aquí está la presentación.</div>
       </div>
       <div class="chat-typing" id="chatTyping">
         <div class="chat-dot"></div><div class="chat-dot"></div><div class="chat-dot"></div>
@@ -595,7 +637,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
       </div>
     </div>
     <div class="card r d3" style="margin-top:clamp(.5rem,1.5vw,1rem);text-align:center;">
-      <p style="font-size:var(--body);color:var(--white);">No necesitas preparar ni organizar nada. <strong style="color:var(--cyan);">Dale lo que tienes y describe lo que quieres.</strong></p>
+      <p style="font-size:var(--body);color:var(--white);">No necesitamos preparar ni organizar nada. <strong style="color:var(--cyan);">Le damos lo que tenemos y describimos lo que queremos.</strong></p>
     </div>
   </div>
 </section>
@@ -609,18 +651,18 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
   <span class="section-label">05 &middot; Plantilla corporativa</span>
   <div class="slide-content" style="position:relative;z-index:2;">
     <div class="tag tag-mg r" style="margin-bottom:clamp(.4rem,1vw,.875rem);">Poder extra</div>
-    <h2 class="r d1">Misma estructura.<br><span class="mg">Nuevo contenido.</span><br>Siempre tu identidad.</h2>
+    <h2 class="r d1">Misma estructura.<br><span class="mg">Nuevo contenido.</span><br>Siempre nuestra identidad.</h2>
     <div class="template-flow r d2">
       <div class="tpl-box">
         <div class="tpl-icon">PPT</div>
-        <div class="tpl-title">Tu plantilla corporativa</div>
-        <div class="tpl-desc">El archivo .pptx con los colores, fuentes y estructura de tu empresa.</div>
+        <div class="tpl-title">Nuestra plantilla corporativa</div>
+        <div class="tpl-desc">El archivo .pptx con los colores, fuentes y estructura de nuestra empresa.</div>
       </div>
       <div class="tpl-arrow">+</div>
       <div class="tpl-box">
         <div class="tpl-icon" style="color:var(--mag);">DATA</div>
-        <div class="tpl-title">Tus datos</div>
-        <div class="tpl-desc">El Excel, el informe o el texto con la información que necesitas presentar.</div>
+        <div class="tpl-title">Nuestros datos</div>
+        <div class="tpl-desc">El Excel, el informe o el texto con la información que necesitamos presentar.</div>
       </div>
       <div class="tpl-arrow">=</div>
       <div class="tpl-box result">
@@ -630,32 +672,13 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
       </div>
     </div>
     <div class="card r d3" style="margin-top:clamp(.5rem,1.2vw,1rem);">
-      <p style="font-size:var(--small);color:var(--muted);">El agente extrae la identidad visual de tu plantilla y la aplica a los nuevos slides automáticamente. <strong style="color:var(--white);">No tienes que explicarle los colores ni los estilos.</strong></p>
+      <p style="font-size:var(--small);color:var(--muted);">El agente extrae la identidad visual de nuestra plantilla y la aplica a los nuevos slides automáticamente. <strong style="color:var(--white);">No hay que explicarle los colores ni los estilos.</strong></p>
     </div>
   </div>
 </section>
 
 <!-- ======================================================
-     SLIDE 7 — EL RESULTADO
-     ====================================================== -->
-<section class="slide" id="s7" data-slide="7">
-  <div class="grid-bg"></div>
-  <span class="section-label">06 &middot; Resultado</span>
-  <div class="slide-content">
-    <h2 class="r">Una presentación completa.<br><span class="cy">Lista para abrir y mostrar.</span></h2>
-    <div class="hr r d1"></div>
-    <ul class="result-list r d2">
-      <li><span class="rl-bullet">&#9657;</span><div><strong>Navegación fluida</strong> — avanza con las flechas del teclado, la rueda del mouse o deslizando en móvil.</div></li>
-      <li><span class="rl-bullet">&#9657;</span><div><strong>Animaciones de entrada</strong> — cada elemento aparece con timing calculado, claro y sin distracciones.</div></li>
-      <li><span class="rl-bullet">&#9657;</span><div><strong>Se ve bien en cualquier pantalla</strong> — laptop, TV de sala de juntas, tablet o celular.</div></li>
-      <li><span class="rl-bullet">&#9657;</span><div><strong>Sin instalar nada</strong> — abre directo en el navegador con doble clic. No necesitas PowerPoint ni otro programa.</div></li>
-      <li><span class="rl-bullet">&#9657;</span><div><strong>Ajustes en la misma conversación</strong> — si algo no quedó bien, pídeselo al agente y lo corrige al instante.</div></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ======================================================
-     SLIDE 8 — CONSISTENCIA (toggles)
+     SLIDE 7 — CONSISTENCIA (toggles)
      ====================================================== -->
 <section class="slide" id="s8" data-slide="8">
   <div class="grid-bg"></div>
@@ -670,7 +693,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
       </div>
       <div class="toggle-row" id="tog-2">
         <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-2')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-        <div class="toggle-label"><div class="tl-title">Estructura de slides consistente</div><div class="tl-off">Cada informe tiene un orden diferente y distintos niveles de detalle.</div><div class="tl-on">Siempre la misma estructura: contexto → datos → hallazgos → decisión sugerida.</div></div>
+        <div class="toggle-label"><div class="tl-title">Estructura de slides consistente</div><div class="tl-off">Cada informe tiene un orden diferente y distintos niveles de detalle.</div><div class="tl-on">Siempre la misma estructura.</div></div>
       </div>
       <div class="toggle-row" id="tog-3">
         <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-3')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
@@ -691,9 +714,9 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
   <div class="grid-bg"></div>
   <span class="section-label">08 &middot; Estilos</span>
   <div class="slide-content">
-    <h2 class="r">12 estilos visuales.<br><span class="cy">O el tuyo propio.</span></h2>
+    <h2 class="r">12 estilos visuales.<br><span class="cy">O el nuestro propio.</span></h2>
     <div class="hr r d1"></div>
-    <p class="r d1 mu" style="font-size:var(--small);margin-bottom:clamp(.4rem,.8vw,.6rem);">El agente puede usar cualquiera de estos presets, o replicar la identidad visual de tu plantilla corporativa.</p>
+    <p class="r d1 mu" style="font-size:var(--small);margin-bottom:clamp(.4rem,.8vw,.6rem);">El agente puede usar cualquiera de estos presets, o replicar la identidad visual de nuestra plantilla en pptx.</p>
     <div class="preset-picker r d2">
       <div class="preset-chips" id="presetChips"></div>
       <div class="preset-preview" id="presetPreview">
@@ -705,31 +728,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
 </section>
 
 <!-- ======================================================
-     SLIDE 10 — FLUJO COMPLETO (pipeline)
-     ====================================================== -->
-<section class="slide" id="s10" data-slide="10">
-  <div class="grid-bg"></div>
-  <span class="section-label">09 &middot; Flujo</span>
-  <div class="slide-content">
-    <h2 class="r">De archivos a presentación<br><span class="cy">en una conversación.</span></h2>
-    <div class="hr r d1"></div>
-    <div class="pipeline r d2" id="pipeline">
-      <div class="pl-step active" data-detail="Sube el Excel, el informe, el PDF o cualquier archivo con la información que necesitas. También puedes pegar texto directamente en el chat."><div class="pl-num">1</div><div class="pl-title">Sube tus archivos</div><div class="pl-sub">Cualquier formato</div></div>
-      <div class="pl-step" data-detail="Escríbele al agente en lenguaje natural: para quién es la presentación, cuántas slides quieres, qué decisión debe soportar. Sin comandos, sin configuraciones."><div class="pl-num">2</div><div class="pl-title">Describe lo que quieres</div><div class="pl-sub">Lenguaje natural</div></div>
-      <div class="pl-step" data-detail="El agente te pregunta si quieres usar tu plantilla corporativa o un estilo nuevo. Elige el que más se ajuste a la audiencia y el contexto."><div class="pl-num">3</div><div class="pl-title">Elige el estilo</div><div class="pl-sub">Plantilla o preset</div></div>
-      <div class="pl-step" data-detail="El agente construye las slides, estructura el contenido, aplica el diseño y valida que todo encaje bien en pantalla. Entrega el archivo listo."><div class="pl-num">4</div><div class="pl-title">El agente genera</div><div class="pl-sub">Automático</div></div>
-      <div class="pl-step" data-detail="Abre la presentación con doble clic en el navegador. Si necesitas ajustes, pídeselos al agente en el mismo chat. Sin exportar, sin instalar nada."><div class="pl-num">5</div><div class="pl-title">Presenta</div><div class="pl-sub">Abre en el browser</div></div>
-    </div>
-    <div class="pl-detail r d3" id="plDetail">Selecciona una etapa para ver el detalle.</div>
-    <div class="pl-controls r d3">
-      <button class="pl-btn pl-prev" onclick="pipelineNav(-1)">&#8592; anterior</button>
-      <button class="pl-btn pl-next" onclick="pipelineNav(1)">siguiente &#8594;</button>
-    </div>
-  </div>
-</section>
-
-<!-- ======================================================
-     SLIDE 11 — BENEFICIOS
+     SLIDE 9 — BENEFICIOS
      ====================================================== -->
 <section class="slide" id="s11" data-slide="11">
   <div class="grid-bg"></div>
@@ -754,9 +753,29 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
 <section class="slide" id="s12" data-slide="12">
   <div class="grid-bg"></div>
   <div class="cta-glow"></div>
+  <div class="cta-orbit">
+    <div class="orbit-scene">
+      <div class="orbit-cube">
+        <div class="orbit-face of"></div>
+        <div class="orbit-face ob"></div>
+        <div class="orbit-face ol"></div>
+        <div class="orbit-face or"></div>
+        <div class="orbit-face ot"></div>
+        <div class="orbit-face om"></div>
+      </div>
+      <div class="orbit-cube2">
+        <div class="orbit-face2 of2"></div>
+        <div class="orbit-face2 ob2"></div>
+        <div class="orbit-face2 ol2"></div>
+        <div class="orbit-face2 or2"></div>
+        <div class="orbit-face2 ot2"></div>
+        <div class="orbit-face2 om2"></div>
+      </div>
+    </div>
+  </div>
   <div class="cta-inner">
     <div class="tag tag-cy r">Ya está disponible</div>
-    <p class="cta-sub r d1">Tu próxima presentación empieza con una conversación.</p>
+    <p class="cta-sub r d1">Nuestra próxima presentación empieza con una conversación.</p>
     <div class="agent-name r d2">Presentaciones<br>Procesos</div>
     <div class="cta-instruction r d3">
       Habla con el agente y cuéntale qué necesitas presentar.<br>
@@ -895,33 +914,6 @@ const PRESETS = [
   preview.style.borderColor = PRESETS[0].fg+'55';
   title.style.color = PRESETS[0].fg;
 })();
-
-// ============================================================
-// SLIDE 10 — PIPELINE
-// ============================================================
-const plSteps  = Array.from(document.querySelectorAll('#pipeline .pl-step'));
-const plDetail = document.getElementById('plDetail');
-let plActive   = 0;
-
-function setPlStep(i) {
-  plActive = Math.max(0, Math.min(i, plSteps.length-1));
-  plSteps.forEach((s, idx) => {
-    s.classList.remove('active','done');
-    if (idx === plActive) s.classList.add('active');
-    else if (idx < plActive) s.classList.add('done');
-  });
-  plDetail.style.opacity   = '0';
-  plDetail.style.transform = 'translateY(6px)';
-  requestAnimationFrame(() => {
-    plDetail.style.transition = 'opacity 250ms ease, transform 300ms ease';
-    plDetail.style.opacity    = '1';
-    plDetail.style.transform  = 'none';
-    plDetail.textContent      = plSteps[plActive].dataset.detail;
-  });
-}
-plSteps.forEach((s,i) => s.addEventListener('click', () => setPlStep(i)));
-window.pipelineNav = function(dir) { setPlStep(plActive+dir); };
-setPlStep(0);
 
 // ============================================================
 // NAVIGATION
