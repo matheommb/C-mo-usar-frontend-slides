@@ -508,7 +508,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
     <div class="flip-grid r d2">
       <div class="flip-wrap"><div class="flip-card">
         <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Tiempo perdido</div><div class="flip-desc">Horas organizando datos en slides, ajustando formato y alineando colores.</div></div>
-        <div class="flip-back"><div class="flip-title cy">Minutos, no horas</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">El agente lee nuestros archivos y construye el deck completo mientras nos enfocamos en el contenido.</div></div>
+        <div class="flip-back"><div class="flip-title cy">Minutos, no horas</div><div class="flip-desc" style="color:rgba(240,246,255,.8);">El agente lee nuestros archivos y construye la presentación completa mientras nos enfocamos en el contenido.</div></div>
       </div></div>
       <div class="flip-wrap"><div class="flip-card">
         <div class="flip-front"><div class="flip-title" style="color:rgba(255,0,128,.9);">Sin estándar de equipo</div><div class="flip-desc">Cada presentación luce diferente. No hay una identidad visual consistente.</div></div>
@@ -568,19 +568,22 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
     <div class="chat-shell r d2" id="chatShell">
       <div class="chat-msg user" id="cm1">
         <div class="chat-avatar user-av">YO</div>
-        <div class="chat-bubble">Hazme un informe de 10 slides con la información adjunta para presentar los hallazgos de la iniciativa al comité directivo.</div>
+        <div class="chat-bubble">Hola</div>
       </div>
       <div class="chat-msg agent" id="cm2">
         <div class="chat-avatar ai-av">PP</div>
-        <div class="chat-bubble">Perfecto. ¿Usamos la plantilla corporativa de nuestro equipo o prefieres un estilo nuevo para esta presentación?</div>
+        <div class="chat-bubble">Hola, soy Presentaciones TDO. Puedo convertir cualquier información en una presentación profesional en dos formatos:<br><br>
+        <strong>PowerPoint (.pptx):</strong> archivo editable, simple en diseño pero listo para ajustar en Office.<br>
+        <strong>HTML interactivo:</strong> presentación web con animaciones y estilos visuales — ideal para presentar en pantalla.<br><br>
+        ¿Con cuál quieres trabajar? También puedes compartirme archivos con el contenido — Excel, Word, PDF, PPTX o texto — y arrancamos.</div>
       </div>
       <div class="chat-msg user" id="cm3">
         <div class="chat-avatar user-av">YO</div>
-        <div class="chat-bubble">Usa la plantilla corporativa, por favor.</div>
+        <div class="chat-bubble">HTML interactivo. Te adjunto el informe.</div>
       </div>
       <div class="chat-msg agent" id="cm4">
         <div class="chat-avatar ai-av">PP</div>
-        <div class="chat-bubble">Listo. Generé 10 slides con nuestra identidad corporativa: contexto de la iniciativa, hallazgos clave, análisis de impacto y próximos pasos. Aquí está la presentación.</div>
+        <div class="chat-bubble">Perfecto. Leí el archivo. ¿Qué estilo visual prefieres? Tengo desde minimalista hasta neon cyber. O si tienes una plantilla .pptx la replico.</div>
       </div>
       <div class="chat-typing" id="chatTyping">
         <div class="chat-dot"></div><div class="chat-dot"></div><div class="chat-dot"></div>
@@ -697,7 +700,7 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
       </div>
       <div class="toggle-row" id="tog-3">
         <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-3')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
-        <div class="toggle-label"><div class="tl-title">Actualizaciones sin reproceso</div><div class="tl-off">Un dato cambia → hay que rehacer todo el deck manualmente.</div><div class="tl-on">Cambia el archivo fuente → pídele al agente que rehaga la presentación → listo.</div></div>
+        <div class="toggle-label"><div class="tl-title">Actualizaciones sin reproceso</div><div class="tl-off">Un dato cambia → hay que rehacer toda la presentación manualmente.</div><div class="tl-on">Cambia el archivo fuente → pídele al agente que rehaga la presentación → listo.</div></div>
       </div>
       <div class="toggle-row" id="tog-4">
         <label class="toggle-switch"><input type="checkbox" onchange="toggleRow(this,'tog-4')"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
