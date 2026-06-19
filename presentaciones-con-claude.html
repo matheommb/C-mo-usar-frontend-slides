@@ -204,8 +204,8 @@ p, li { font-size: var(--body); line-height: 1.6; color: rgba(240,246,255,0.82);
 .chat-shell { background:rgba(0,0,0,.5); border:1px solid var(--border);
   border-radius:14px; padding:clamp(.75rem,2vw,1.25rem);
   display:flex; flex-direction:column; gap:clamp(.4rem,1vw,.75rem);
-  margin-top:clamp(.5rem,1.5vw,1rem); max-height:clamp(220px,42vh,360px);
-  overflow:hidden; position:relative; }
+  margin-top:clamp(.5rem,1.5vw,1rem); flex:1; min-height:0;
+  overflow-y:auto; position:relative; }
 .chat-msg { display:flex; gap:.6rem; align-items:flex-start; opacity:0;
   transform:translateY(8px); transition:opacity .3s ease, transform .35s ease; }
 .chat-msg.show { opacity:1; transform:none; }
